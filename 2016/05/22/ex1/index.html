@@ -55,7 +55,7 @@ AsyncTask和Jsoup进行异步网络下载音频和字幕抓取
 MediaPlay 进行判断本地是否有音频，若有则本地播放，若无则进行预加载播放
 AppCompatSeekBar 进度控制
 RcyclerView简述基础代码">
-<meta property="og:updated_time" content="2016-05-22T09:40:52.120Z">
+<meta property="og:updated_time" content="2016-05-22T09:53:40.979Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从一个实例简单学习RecyclerView基础应用">
 <meta name="twitter:description" content="实例简介
@@ -246,35 +246,21 @@ RcyclerView简述基础代码">
       
 
       
-        <span itemprop="articleBody"><h1 id="实例简介"><a href="#实例简介" class="headerlink" title="实例简介"></a>实例简介</h1><ul>
+        <span itemprop="articleBody"><h2 id="实例简介"><a href="#实例简介" class="headerlink" title="实例简介"></a>实例简介</h2><ul>
 <li>每日对【听力特快】中空中英语教室和CNN学生新闻视频栏目的音频文件下载，同时包括对CNN学生新闻视频的字幕抓取</li>
 <li>RecyclerView+CardView进行布局展示</li>
 <li>AsyncTask和Jsoup进行异步网络下载音频和字幕抓取</li>
 <li>MediaPlay 进行判断本地是否有音频，若有则本地播放，若无则进行预加载播放</li>
 <li><p>AppCompatSeekBar 进度控制</p>
-<h1 id="RcyclerView简述"><a href="#RcyclerView简述" class="headerlink" title="RcyclerView简述"></a>RcyclerView简述</h1><h2 id="基础代码"><a href="#基础代码" class="headerlink" title="基础代码"></a>基础代码</h2></li>
+<h2 id="RcyclerView简述"><a href="#RcyclerView简述" class="headerlink" title="RcyclerView简述"></a>RcyclerView简述</h2><h3 id="基础代码"><a href="#基础代码" class="headerlink" title="基础代码"></a>基础代码</h3></li>
 <li><p>LayoutManager: 管理RecyclerView的结构.</p>
 </li>
 <li>Adapter: 处理每个Item的显示.</li>
 <li>ItemDecoration: 添加每个Item的装饰.</li>
-<li>ItemAnimator: 负责添加\移除\重排序时的动画效果.</li>
+<li>ItemAnimator: 负责添加\移除\重排序时的动画效果.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> mRecyclerView = findView(R.id.recyclerView);</span><br><span class="line">//设置布局管理器</span><br><span class="line">mRecyclerView.setLayoutManager(layout);</span><br><span class="line">//设置adapter</span><br><span class="line">mRecyclerView.setAdapter(adapter)</span><br><span class="line">//设置Item增加、移除动画</span><br><span class="line">mRecyclerView.setItemAnimator(new DefaultItemAnimator());</span><br><span class="line">//添加分割线</span><br><span class="line">mRecyclerView.addItemDecoration(new DividerItemDecoration(</span><br><span class="line">                getActivity(), DividerItemDecoration.HORIZONTAL_LIST));</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
-<p><code>mRecyclerView = findView(R.id.recyclerView);
-//设置布局管理器
-mRecyclerView.setLayoutManager(layout);
-//设置adapter
-mRecyclerView.setAdapter(adapter)
-//设置Item增加、移除动画
-mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-//添加分割线
-mRecyclerView.addItemDecoration(new DividerItemDecoration(
-                getActivity(), DividerItemDecoration.HORIZONTAL_LIST));</code></p>
-<h2 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h2><p><code>LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);
-recyclerView.setLayoutManager(llm);
-recyclerView.setHasFixedSize(true);
-recyclerView.setAdapter(adapter);
-int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.space);
-recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels)); //设置分割线</code></p>
+<h3 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);</span><br><span class="line">recyclerView.setLayoutManager(llm);</span><br><span class="line">recyclerView.setHasFixedSize(true);</span><br><span class="line">recyclerView.setAdapter(adapter);</span><br><span class="line">int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.space);</span><br><span class="line">recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels)); //设置分割线</span><br></pre></td></tr></table></figure>
 <h3 id="布局管理"><a href="#布局管理" class="headerlink" title="布局管理"></a>布局管理</h3><ul>
 <li><p>RecyclerView提供这些内置的布局管理器：</p>
 </li>
@@ -287,89 +273,14 @@ recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels)); //设�
 <li><p>要创建自定义布局管理器，扩展RecyclerView.LayoutManager类。</p>
 </li>
 </ul>
-<h3 id="自定义分割线"><a href="#自定义分割线" class="headerlink" title="自定义分割线"></a>自定义分割线</h3><p> <code>// 分隔间距 继承RecyclerView.ItemDecoration
-    class SpaceItemDecoration extends RecyclerView.ItemDecoration {
-        private int space;
-        public SpaceItemDecoration(int space) {
-            this.space = space;
-        }
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-//            super.getItemOffsets(outRect, view, parent, state);
-            if (parent.getChildAdapterPosition(view) != 0) {
-                outRect.top = space;
-            }
-        }
-    }</code></p>
-<h3 id="写好继承自RecyclerView-ItemDecoration的类，即可自定义间隔距离。"><a href="#写好继承自RecyclerView-ItemDecoration的类，即可自定义间隔距离。" class="headerlink" title="写好继承自RecyclerView.ItemDecoration的类，即可自定义间隔距离。"></a>写好继承自RecyclerView.ItemDecoration的类，即可自定义间隔距离。</h3><p><code>int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.space);
-recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));</code></p>
-<h3 id="Adapter"><a href="#Adapter" class="headerlink" title="Adapter"></a>Adapter</h3><p>适配器, 处理RecyclerView的Item事务.</p>
-<p><code>public class RecyclerViewAdapter extends RecyclerView.Adapter&lt;RecyclerViewAdapter.InfosViewHolder&gt; {
-    private final String TAG = &quot;RecyclerViewAdapter&quot;;
-    private List&lt;Infos&gt; infos;
-    private Context context;
-    private String[] url = new String[2];
-    private int progress;
-    public RecyclerViewAdapter(List&lt;Infos&gt; infos, Context context) {
-        this.infos = infos;
-        this.context = context;
-    }
-    @Override
-    public RecyclerViewAdapter.InfosViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(context).inflate(R.layout.cardview_item, viewGroup, false);
-        InfosViewHolder nvh = new InfosViewHolder(v);
-        return nvh;
-    }
-    @Override
-    public void onBindViewHolder(final RecyclerViewAdapter.InfosViewHolder personViewHolder, int i) {
-        final int j = i;
-      personViewHolder.news_photo.setImageResource(infos.get(i).getPhotoId());
-        personViewHolder.news_title.setText(infos.get(i).getTitle());
-        personViewHolder.news_desc.setText(infos.get(i).getDesc());
-        url[i] = infos.get(i).getUrl();
-        //cardView arrowbutton设置点击事件
-        personViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, InfosActivity.class);
-                intent.putExtra(&quot;Infos&quot;, infos.get(j));
-                context.startActivity(intent);
-                Log.d(TAG, &quot;this is &quot; + j);
-            }
-        });
-      personViewHolder.arrowButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                personViewHolder.arrowButton.startAnimating();
-//               这里因为viewHolder是final 从第一栏加载 所以最后的数据是最好一栏的数据 解决方案就是将viewHolder需要做事件的控件传入
-                DownloadTask downloadTask = new DownloadTask(context, infos.get(j).getTitle(), personViewHolder.arrowButton);
-                downloadTask.execute(url[j]);
-                Log.d(TAG, url[j]);
-            }
-        });</code></p>
+<h3 id="自定义分割线"><a href="#自定义分割线" class="headerlink" title="自定义分割线"></a>自定义分割线</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> // 分隔间距 继承RecyclerView.ItemDecoration</span><br><span class="line">    class SpaceItemDecoration extends RecyclerView.ItemDecoration &#123;</span><br><span class="line">        private int space;</span><br><span class="line">        public SpaceItemDecoration(int space) &#123;</span><br><span class="line">            this.space = space;</span><br><span class="line">        &#125;</span><br><span class="line">        @Override</span><br><span class="line">        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) &#123;</span><br><span class="line">//            super.getItemOffsets(outRect, view, parent, state);</span><br><span class="line">            if (parent.getChildAdapterPosition(view) != 0) &#123;</span><br><span class="line">                outRect.top = space;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="写好继承自RecyclerView-ItemDecoration的类，即可自定义间隔距离。"><a href="#写好继承自RecyclerView-ItemDecoration的类，即可自定义间隔距离。" class="headerlink" title="写好继承自RecyclerView.ItemDecoration的类，即可自定义间隔距离。"></a>写好继承自RecyclerView.ItemDecoration的类，即可自定义间隔距离。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.space);</span><br><span class="line">recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));</span><br></pre></td></tr></table></figure>
+<h3 id="Adapter"><a href="#Adapter" class="headerlink" title="Adapter"></a>Adapter</h3><p>适配器, 处理RecyclerView的Item事务.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">public class RecyclerViewAdapter extends RecyclerView.Adapter&lt;RecyclerViewAdapter.InfosViewHolder&gt; &#123;</span><br><span class="line">    private final String TAG = &quot;RecyclerViewAdapter&quot;;</span><br><span class="line">    private List&lt;Infos&gt; infos;</span><br><span class="line">    private Context context;</span><br><span class="line">    private String[] url = new String[2];</span><br><span class="line">    private int progress;</span><br><span class="line">    public RecyclerViewAdapter(List&lt;Infos&gt; infos, Context context) &#123;</span><br><span class="line">        this.infos = infos;</span><br><span class="line">        this.context = context;</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public RecyclerViewAdapter.InfosViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) &#123;</span><br><span class="line">        View v = LayoutInflater.from(context).inflate(R.layout.cardview_item, viewGroup, false);</span><br><span class="line">        InfosViewHolder nvh = new InfosViewHolder(v);</span><br><span class="line">        return nvh;</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public void onBindViewHolder(final RecyclerViewAdapter.InfosViewHolder personViewHolder, int i) &#123;</span><br><span class="line">        final int j = i;</span><br><span class="line">      personViewHolder.news_photo.setImageResource(infos.get(i).getPhotoId());</span><br><span class="line">        personViewHolder.news_title.setText(infos.get(i).getTitle());</span><br><span class="line">        personViewHolder.news_desc.setText(infos.get(i).getDesc());</span><br><span class="line">        url[i] = infos.get(i).getUrl();</span><br><span class="line">        //cardView arrowbutton设置点击事件</span><br><span class="line">        personViewHolder.cardView.setOnClickListener(new View.OnClickListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onClick(View v) &#123;</span><br><span class="line">                Intent intent = new Intent(context, InfosActivity.class);</span><br><span class="line">                intent.putExtra(&quot;Infos&quot;, infos.get(j));</span><br><span class="line">                context.startActivity(intent);</span><br><span class="line">                Log.d(TAG, &quot;this is &quot; + j);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">      personViewHolder.arrowButton.setOnClickListener(new View.OnClickListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onClick(View v) &#123;</span><br><span class="line">                personViewHolder.arrowButton.startAnimating();</span><br><span class="line">//               这里因为viewHolder是final 从第一栏加载 所以最后的数据是最好一栏的数据 解决方案就是将viewHolder需要做事件的控件传入</span><br><span class="line">                DownloadTask downloadTask = new DownloadTask(context, infos.get(j).getTitle(), personViewHolder.arrowButton);</span><br><span class="line">                downloadTask.execute(url[j]);</span><br><span class="line">                Log.d(TAG, url[j]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure></p>
 <h3 id="关键方法意义"><a href="#关键方法意义" class="headerlink" title="关键方法意义"></a>关键方法意义</h3><blockquote>
 <p>onCreateViewHolder创建ViewHolder.<br>onBindViewHolder绑定每一项数据.</p>
 <p>getItemCount返回列表长度.</p>
 </blockquote>
-<h3 id="RecyclerView强制使用ViewHolder"><a href="#RecyclerView强制使用ViewHolder" class="headerlink" title="RecyclerView强制使用ViewHolder."></a>RecyclerView强制使用ViewHolder.</h3><p><code>//自定义ViewHolder类 进行视图绑定
-static class InfosViewHolder extends RecyclerView.ViewHolder {
-    @Bind(R.id.cardView)
-    CardView cardView;
-    @Bind(R.id.news_photo)
-    ImageView news_photo;
-    @Bind(R.id.news_title)
-    TextView news_title;
-    @Bind(R.id.news_desc)
-    TextView news_desc;
-    @Bind(R.id.arrow_button)
-    ArrowDownloadButton arrowButton;
-    public InfosViewHolder(final View itemView) {
-        super(itemView);        
-        ButterKnife.bind(this, itemView);
-        //设置TextView背景为半透明
-        news_title.setBackgroundColor(Color.argb(20, 0, 0, 0));
-    }
-}</code></p>
+<h3 id="RecyclerView强制使用ViewHolder"><a href="#RecyclerView强制使用ViewHolder" class="headerlink" title="RecyclerView强制使用ViewHolder."></a>RecyclerView强制使用ViewHolder.</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">//自定义ViewHolder类 进行视图绑定</span><br><span class="line">static class InfosViewHolder extends RecyclerView.ViewHolder &#123;</span><br><span class="line">    @Bind(R.id.cardView)</span><br><span class="line">    CardView cardView;</span><br><span class="line">    @Bind(R.id.news_photo)</span><br><span class="line">    ImageView news_photo;</span><br><span class="line">    @Bind(R.id.news_title)</span><br><span class="line">    TextView news_title;</span><br><span class="line">    @Bind(R.id.news_desc)</span><br><span class="line">    TextView news_desc;</span><br><span class="line">    @Bind(R.id.arrow_button)</span><br><span class="line">    ArrowDownloadButton arrowButton;</span><br><span class="line">    public InfosViewHolder(final View itemView) &#123;</span><br><span class="line">        super(itemView);		</span><br><span class="line">        ButterKnife.bind(this, itemView);</span><br><span class="line">        //设置TextView背景为半透明</span><br><span class="line">        news_title.setBackgroundColor(Color.argb(20, 0, 0, 0));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>在onCreateViewHolder方法, 创建类; 在onBindViewHolder方法, 绑定数据.</p>
 </blockquote>
@@ -378,10 +289,10 @@ static class InfosViewHolder extends RecyclerView.ViewHolder {
 <p>问题解决。</p>
 <h3 id="数据更新"><a href="#数据更新" class="headerlink" title="数据更新"></a>数据更新</h3><p>RecyclerView的更新自己目前用到的还是adapter.notifyDataSetChanged</p>
 <h3 id="新手Tips"><a href="#新手Tips" class="headerlink" title="新手Tips"></a>新手Tips</h3><ul>
-<li>implements Serializable 的范类才可以进行Intent传送</li>
+<li>implements Serializable 的范类才可以进行Intent传送<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Intent intent = getIntent();</span><br><span class="line">Infos item = (Infos) intent.getSerializableExtra(&quot;Infos&quot;);</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
-<p><code>Intent intent = getIntent();
-Infos item = (Infos) intent.getSerializableExtra(&quot;Infos&quot;);</code><br>*理解ViewHolder的加载模式</p>
+<p>*理解ViewHolder的加载模式</p>
 <p>*Handler灵活应用</p>
 </span>
       
@@ -538,7 +449,7 @@ Infos item = (Infos) intent.getSerializableExtra(&quot;Infos&quot;);</code><br>*
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#实例简介"><span class="nav-number">1.</span> <span class="nav-text">实例简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RcyclerView简述"><span class="nav-number">2.</span> <span class="nav-text">RcyclerView简述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础代码"><span class="nav-number">2.1.</span> <span class="nav-text">基础代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例代码"><span class="nav-number">2.2.</span> <span class="nav-text">实例代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#布局管理"><span class="nav-number">2.2.1.</span> <span class="nav-text">布局管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义分割线"><span class="nav-number">2.2.2.</span> <span class="nav-text">自定义分割线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写好继承自RecyclerView-ItemDecoration的类，即可自定义间隔距离。"><span class="nav-number">2.2.3.</span> <span class="nav-text">写好继承自RecyclerView.ItemDecoration的类，即可自定义间隔距离。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Adapter"><span class="nav-number">2.2.4.</span> <span class="nav-text">Adapter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关键方法意义"><span class="nav-number">2.2.5.</span> <span class="nav-text">关键方法意义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RecyclerView强制使用ViewHolder"><span class="nav-number">2.2.6.</span> <span class="nav-text">RecyclerView强制使用ViewHolder.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#遇到的小问题"><span class="nav-number">2.2.7.</span> <span class="nav-text">遇到的小问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据更新"><span class="nav-number">2.2.8.</span> <span class="nav-text">数据更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新手Tips"><span class="nav-number">2.2.9.</span> <span class="nav-text">新手Tips</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#实例简介"><span class="nav-number">1.</span> <span class="nav-text">实例简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RcyclerView简述"><span class="nav-number">2.</span> <span class="nav-text">RcyclerView简述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础代码"><span class="nav-number">2.1.</span> <span class="nav-text">基础代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例代码"><span class="nav-number">2.2.</span> <span class="nav-text">实例代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#布局管理"><span class="nav-number">2.3.</span> <span class="nav-text">布局管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义分割线"><span class="nav-number">2.4.</span> <span class="nav-text">自定义分割线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写好继承自RecyclerView-ItemDecoration的类，即可自定义间隔距离。"><span class="nav-number">2.5.</span> <span class="nav-text">写好继承自RecyclerView.ItemDecoration的类，即可自定义间隔距离。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Adapter"><span class="nav-number">2.6.</span> <span class="nav-text">Adapter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关键方法意义"><span class="nav-number">2.7.</span> <span class="nav-text">关键方法意义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RecyclerView强制使用ViewHolder"><span class="nav-number">2.8.</span> <span class="nav-text">RecyclerView强制使用ViewHolder.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#遇到的小问题"><span class="nav-number">2.9.</span> <span class="nav-text">遇到的小问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据更新"><span class="nav-number">2.10.</span> <span class="nav-text">数据更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新手Tips"><span class="nav-number">2.11.</span> <span class="nav-text">新手Tips</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
