@@ -55,7 +55,7 @@ AsyncTask和Jsoup进行异步网络下载音频和字幕抓取
 MediaPlay 进行判断本地是否有音频，若有则本地播放，若无则进行预加载播放
 AppCompatSeekBar 进度控制
 RcyclerView简述基础代码">
-<meta property="og:updated_time" content="2016-05-22T09:37:04.385Z">
+<meta property="og:updated_time" content="2016-05-22T09:40:52.120Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从一个实例简单学习RecyclerView基础应用">
 <meta name="twitter:description" content="实例简介
@@ -246,13 +246,13 @@ RcyclerView简述基础代码">
       
 
       
-        <span itemprop="articleBody"><h2 id="实例简介"><a href="#实例简介" class="headerlink" title="实例简介"></a>实例简介</h2><ul>
+        <span itemprop="articleBody"><h1 id="实例简介"><a href="#实例简介" class="headerlink" title="实例简介"></a>实例简介</h1><ul>
 <li>每日对【听力特快】中空中英语教室和CNN学生新闻视频栏目的音频文件下载，同时包括对CNN学生新闻视频的字幕抓取</li>
 <li>RecyclerView+CardView进行布局展示</li>
 <li>AsyncTask和Jsoup进行异步网络下载音频和字幕抓取</li>
 <li>MediaPlay 进行判断本地是否有音频，若有则本地播放，若无则进行预加载播放</li>
 <li><p>AppCompatSeekBar 进度控制</p>
-<h2 id="RcyclerView简述"><a href="#RcyclerView简述" class="headerlink" title="RcyclerView简述"></a>RcyclerView简述</h2><h3 id="基础代码"><a href="#基础代码" class="headerlink" title="基础代码"></a>基础代码</h3></li>
+<h1 id="RcyclerView简述"><a href="#RcyclerView简述" class="headerlink" title="RcyclerView简述"></a>RcyclerView简述</h1><h2 id="基础代码"><a href="#基础代码" class="headerlink" title="基础代码"></a>基础代码</h2></li>
 <li><p>LayoutManager: 管理RecyclerView的结构.</p>
 </li>
 <li>Adapter: 处理每个Item的显示.</li>
@@ -269,7 +269,7 @@ mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 //添加分割线
 mRecyclerView.addItemDecoration(new DividerItemDecoration(
                 getActivity(), DividerItemDecoration.HORIZONTAL_LIST));</code></p>
-<h3 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h3><p><code>LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);
+<h2 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h2><p><code>LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);
 recyclerView.setLayoutManager(llm);
 recyclerView.setHasFixedSize(true);
 recyclerView.setAdapter(adapter);
@@ -538,7 +538,7 @@ Infos item = (Infos) intent.getSerializableExtra(&quot;Infos&quot;);</code><br>*
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#实例简介"><span class="nav-number">1.</span> <span class="nav-text">实例简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RcyclerView简述"><span class="nav-number">2.</span> <span class="nav-text">RcyclerView简述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础代码"><span class="nav-number">2.1.</span> <span class="nav-text">基础代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例代码"><span class="nav-number">2.2.</span> <span class="nav-text">实例代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#布局管理"><span class="nav-number">2.3.</span> <span class="nav-text">布局管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义分割线"><span class="nav-number">2.4.</span> <span class="nav-text">自定义分割线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写好继承自RecyclerView-ItemDecoration的类，即可自定义间隔距离。"><span class="nav-number">2.5.</span> <span class="nav-text">写好继承自RecyclerView.ItemDecoration的类，即可自定义间隔距离。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Adapter"><span class="nav-number">2.6.</span> <span class="nav-text">Adapter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关键方法意义"><span class="nav-number">2.7.</span> <span class="nav-text">关键方法意义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RecyclerView强制使用ViewHolder"><span class="nav-number">2.8.</span> <span class="nav-text">RecyclerView强制使用ViewHolder.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#遇到的小问题"><span class="nav-number">2.9.</span> <span class="nav-text">遇到的小问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据更新"><span class="nav-number">2.10.</span> <span class="nav-text">数据更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新手Tips"><span class="nav-number">2.11.</span> <span class="nav-text">新手Tips</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#实例简介"><span class="nav-number">1.</span> <span class="nav-text">实例简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RcyclerView简述"><span class="nav-number">2.</span> <span class="nav-text">RcyclerView简述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础代码"><span class="nav-number">2.1.</span> <span class="nav-text">基础代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例代码"><span class="nav-number">2.2.</span> <span class="nav-text">实例代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#布局管理"><span class="nav-number">2.2.1.</span> <span class="nav-text">布局管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义分割线"><span class="nav-number">2.2.2.</span> <span class="nav-text">自定义分割线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写好继承自RecyclerView-ItemDecoration的类，即可自定义间隔距离。"><span class="nav-number">2.2.3.</span> <span class="nav-text">写好继承自RecyclerView.ItemDecoration的类，即可自定义间隔距离。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Adapter"><span class="nav-number">2.2.4.</span> <span class="nav-text">Adapter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关键方法意义"><span class="nav-number">2.2.5.</span> <span class="nav-text">关键方法意义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RecyclerView强制使用ViewHolder"><span class="nav-number">2.2.6.</span> <span class="nav-text">RecyclerView强制使用ViewHolder.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#遇到的小问题"><span class="nav-number">2.2.7.</span> <span class="nav-text">遇到的小问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据更新"><span class="nav-number">2.2.8.</span> <span class="nav-text">数据更新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新手Tips"><span class="nav-number">2.2.9.</span> <span class="nav-text">新手Tips</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
