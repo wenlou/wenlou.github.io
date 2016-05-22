@@ -12,6 +12,7 @@
 <li>AsyncTask和Jsoup进行异步网络下载音频和字幕抓取</li>
 <li>MediaPlay 进行判断本地是否有音频，若有则本地播放，若无则进行预加载播放</li>
 <li><p>AppCompatSeekBar 进度控制</p>
+<a id="more"></a>
 <h2 id="RcyclerView简述"><a href="#RcyclerView简述" class="headerlink" title="RcyclerView简述"></a>RcyclerView简述</h2><h3 id="基础代码"><a href="#基础代码" class="headerlink" title="基础代码"></a>基础代码</h3></li>
 <li><p>LayoutManager: 管理RecyclerView的结构.</p>
 </li>
@@ -49,11 +50,14 @@
 <p>问题解决。</p>
 <h3 id="数据更新"><a href="#数据更新" class="headerlink" title="数据更新"></a>数据更新</h3><p>RecyclerView的更新自己目前用到的还是adapter.notifyDataSetChanged</p>
 <h3 id="新手Tips"><a href="#新手Tips" class="headerlink" title="新手Tips"></a>新手Tips</h3><ul>
-<li>implements Serializable 的范类才可以进行Intent传送<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Intent intent = getIntent();</span><br><span class="line">Infos item = (Infos) intent.getSerializableExtra(&quot;Infos&quot;);</span><br></pre></td></tr></table></figure>
+<li><p>implements Serializable 的范类才可以进行Intent传送</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Intent intent = getIntent();</span><br><span class="line">Infos item = (Infos) intent.getSerializableExtra(&quot;Infos&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>理解ViewHolder的加载模式</p>
+</li>
+<li><p>Handler灵活应用</p>
 </li>
 </ul>
-<p>*理解ViewHolder的加载模式</p>
-<p>*Handler灵活应用</p>
 ]]></content>
     </entry>
     
