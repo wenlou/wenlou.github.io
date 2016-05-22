@@ -64,8 +64,8 @@
     <entry>
       <title><![CDATA[Hello World]]></title>
       <url>http://yoursite.com/2016/05/21/hello-world/</url>
-      <content type="html"><![CDATA[<p>你好！！！第一篇博客从这里开始</p>
-<center> <iframe name="iframe_canvas" src="http://douban.fm/partner/baidu/doubanradio" scrolling="no" frameborder="0" width="400" height="200"></iframe> </center>]]></content>
+      <content type="html"><![CDATA[<p>看到自己的博客加载下来时，突然有种错综复杂的恍惚感。是的，它不是qq空间，不是新浪博客，不是豆瓣小站，也不是贴吧。它更像是属于自己的一块小小的领地，因而我满足于这种归属感。我愿在上面安静劳作。<br>一个农民，通过自身努力终于分到了一块地，不再需要在地主的土地上创造流量价值时，于是翻身作主的他可以宣告说：Hello World。当然这个农民确切来说是个码农。</p>
+]]></content>
     </entry>
     
   
