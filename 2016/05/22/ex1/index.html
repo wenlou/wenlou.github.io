@@ -55,7 +55,7 @@ AsyncTask和Jsoup进行异步网络下载音频和字幕抓取
 MediaPlay 进行判断本地是否有音频，若有则本地播放，若无则进行预加载播放
 AppCompatSeekBar 进度控制
 RcyclerView简述基础代码">
-<meta property="og:updated_time" content="2016-05-22T09:30:47.251Z">
+<meta property="og:updated_time" content="2016-05-22T09:37:04.385Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从一个实例简单学习RecyclerView基础应用">
 <meta name="twitter:description" content="实例简介
@@ -257,11 +257,24 @@ RcyclerView简述基础代码">
 </li>
 <li>Adapter: 处理每个Item的显示.</li>
 <li>ItemDecoration: 添加每个Item的装饰.</li>
-<li>ItemAnimator: 负责添加\移除\重排序时的动画效果.<br>`mRecyclerView = findView(R.id.recyclerView);<br>//设置布局管理器<br>mRecyclerView.setLayoutManager(layout);<br>//设置adapter<br>mRecyclerView.setAdapter(adapter)<br>//设置Item增加、移除动画<br>mRecyclerView.setItemAnimator(new DefaultItemAnimator());<br>//添加分割线<br>mRecyclerView.addItemDecoration(new DividerItemDecoration(<pre><code>getActivity(), DividerItemDecoration.HORIZONTAL_LIST));`
-</code></pre><h3 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h3></li>
+<li>ItemAnimator: 负责添加\移除\重排序时的动画效果.</li>
 </ul>
-<p>`LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);<br>recyclerView.setLayoutManager(llm);<br>recyclerView.setHasFixedSize(true);<br>recyclerView.setAdapter(adapter);</p>
-<p>int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.space);<br>recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels)); //设置分割线`</p>
+<p><code>mRecyclerView = findView(R.id.recyclerView);
+//设置布局管理器
+mRecyclerView.setLayoutManager(layout);
+//设置adapter
+mRecyclerView.setAdapter(adapter)
+//设置Item增加、移除动画
+mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//添加分割线
+mRecyclerView.addItemDecoration(new DividerItemDecoration(
+                getActivity(), DividerItemDecoration.HORIZONTAL_LIST));</code></p>
+<h3 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h3><p><code>LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);
+recyclerView.setLayoutManager(llm);
+recyclerView.setHasFixedSize(true);
+recyclerView.setAdapter(adapter);
+int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.space);
+recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels)); //设置分割线</code></p>
 <h3 id="布局管理"><a href="#布局管理" class="headerlink" title="布局管理"></a>布局管理</h3><ul>
 <li><p>RecyclerView提供这些内置的布局管理器：</p>
 </li>
@@ -274,76 +287,89 @@ RcyclerView简述基础代码">
 <li><p>要创建自定义布局管理器，扩展RecyclerView.LayoutManager类。</p>
 </li>
 </ul>
-<h3 id="自定义分割线"><a href="#自定义分割线" class="headerlink" title="自定义分割线"></a>自定义分割线</h3><p> `// 分隔间距 继承RecyclerView.ItemDecoration<br>    class SpaceItemDecoration extends RecyclerView.ItemDecoration {<br>        private int space;</p>
-<pre><code>public SpaceItemDecoration(int space) {
-    this.space = space;
-}
-
-@Override
-public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-</code></pre><p>//            super.getItemOffsets(outRect, view, parent, state);<br>            if (parent.getChildAdapterPosition(view) != 0) {<br>                outRect.top = space;<br>            }<br>        }</p>
-<pre><code>}`
-</code></pre><h3 id="写好继承自RecyclerView-ItemDecoration的类，即可自定义间隔距离。"><a href="#写好继承自RecyclerView-ItemDecoration的类，即可自定义间隔距离。" class="headerlink" title="写好继承自RecyclerView.ItemDecoration的类，即可自定义间隔距离。"></a>写好继承自RecyclerView.ItemDecoration的类，即可自定义间隔距离。</h3><p><code>int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.space);
+<h3 id="自定义分割线"><a href="#自定义分割线" class="headerlink" title="自定义分割线"></a>自定义分割线</h3><p> <code>// 分隔间距 继承RecyclerView.ItemDecoration
+    class SpaceItemDecoration extends RecyclerView.ItemDecoration {
+        private int space;
+        public SpaceItemDecoration(int space) {
+            this.space = space;
+        }
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+//            super.getItemOffsets(outRect, view, parent, state);
+            if (parent.getChildAdapterPosition(view) != 0) {
+                outRect.top = space;
+            }
+        }
+    }</code></p>
+<h3 id="写好继承自RecyclerView-ItemDecoration的类，即可自定义间隔距离。"><a href="#写好继承自RecyclerView-ItemDecoration的类，即可自定义间隔距离。" class="headerlink" title="写好继承自RecyclerView.ItemDecoration的类，即可自定义间隔距离。"></a>写好继承自RecyclerView.ItemDecoration的类，即可自定义间隔距离。</h3><p><code>int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.space);
 recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));</code></p>
 <h3 id="Adapter"><a href="#Adapter" class="headerlink" title="Adapter"></a>Adapter</h3><p>适配器, 处理RecyclerView的Item事务.</p>
-<p>`public class RecyclerViewAdapter extends RecyclerView.Adapter<recyclerviewadapter.infosviewholder> {<br>    private final String TAG = “RecyclerViewAdapter”;<br>    private List<infos> infos;<br>    private Context context;<br>    private String[] url = new String[2];<br>    private int progress;</infos></recyclerviewadapter.infosviewholder></p>
-<pre><code>public RecyclerViewAdapter(List&lt;Infos&gt; infos, Context context) {
-    this.infos = infos;
-    this.context = context;
-}
-
-
-
-@Override
-public RecyclerViewAdapter.InfosViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-    View v = LayoutInflater.from(context).inflate(R.layout.cardview_item, viewGroup, false);
-    InfosViewHolder nvh = new InfosViewHolder(v);
-    return nvh;
-}
-
-@Override
-public void onBindViewHolder(final RecyclerViewAdapter.InfosViewHolder personViewHolder, int i) {
-    final int j = i;
-
-    personViewHolder.news_photo.setImageResource(infos.get(i).getPhotoId());
-    personViewHolder.news_title.setText(infos.get(i).getTitle());
-    personViewHolder.news_desc.setText(infos.get(i).getDesc());
-
-    url[i] = infos.get(i).getUrl();
-
-    //cardView arrowbutton设置点击事件
-    personViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(context, InfosActivity.class);
-            intent.putExtra(&quot;Infos&quot;, infos.get(j));
-            context.startActivity(intent);
-            Log.d(TAG, &quot;this is &quot; + j);
-        }
-    });
-
-    personViewHolder.arrowButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-            personViewHolder.arrowButton.startAnimating();
-</code></pre><p>//               这里因为viewHolder是final 从第一栏加载 所以最后的数据是最好一栏的数据 解决方案就是将viewHolder需要做事件的控件传入<br>                DownloadTask downloadTask = new DownloadTask(context, infos.get(j).getTitle(), personViewHolder.arrowButton);<br>                downloadTask.execute(url[j]);<br>                Log.d(TAG, url[j]);<br>            }<br>        });`</p>
+<p><code>public class RecyclerViewAdapter extends RecyclerView.Adapter&lt;RecyclerViewAdapter.InfosViewHolder&gt; {
+    private final String TAG = &quot;RecyclerViewAdapter&quot;;
+    private List&lt;Infos&gt; infos;
+    private Context context;
+    private String[] url = new String[2];
+    private int progress;
+    public RecyclerViewAdapter(List&lt;Infos&gt; infos, Context context) {
+        this.infos = infos;
+        this.context = context;
+    }
+    @Override
+    public RecyclerViewAdapter.InfosViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View v = LayoutInflater.from(context).inflate(R.layout.cardview_item, viewGroup, false);
+        InfosViewHolder nvh = new InfosViewHolder(v);
+        return nvh;
+    }
+    @Override
+    public void onBindViewHolder(final RecyclerViewAdapter.InfosViewHolder personViewHolder, int i) {
+        final int j = i;
+      personViewHolder.news_photo.setImageResource(infos.get(i).getPhotoId());
+        personViewHolder.news_title.setText(infos.get(i).getTitle());
+        personViewHolder.news_desc.setText(infos.get(i).getDesc());
+        url[i] = infos.get(i).getUrl();
+        //cardView arrowbutton设置点击事件
+        personViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, InfosActivity.class);
+                intent.putExtra(&quot;Infos&quot;, infos.get(j));
+                context.startActivity(intent);
+                Log.d(TAG, &quot;this is &quot; + j);
+            }
+        });
+      personViewHolder.arrowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                personViewHolder.arrowButton.startAnimating();
+//               这里因为viewHolder是final 从第一栏加载 所以最后的数据是最好一栏的数据 解决方案就是将viewHolder需要做事件的控件传入
+                DownloadTask downloadTask = new DownloadTask(context, infos.get(j).getTitle(), personViewHolder.arrowButton);
+                downloadTask.execute(url[j]);
+                Log.d(TAG, url[j]);
+            }
+        });</code></p>
 <h3 id="关键方法意义"><a href="#关键方法意义" class="headerlink" title="关键方法意义"></a>关键方法意义</h3><blockquote>
 <p>onCreateViewHolder创建ViewHolder.<br>onBindViewHolder绑定每一项数据.</p>
 <p>getItemCount返回列表长度.</p>
 </blockquote>
-<h3 id="RecyclerView强制使用ViewHolder"><a href="#RecyclerView强制使用ViewHolder" class="headerlink" title="RecyclerView强制使用ViewHolder."></a>RecyclerView强制使用ViewHolder.</h3><p>`//自定义ViewHolder类 进行视图绑定<br>static class InfosViewHolder extends RecyclerView.ViewHolder {<br>    @Bind(R.id.cardView)<br>    CardView cardView;<br>    @Bind(R.id.news_photo)<br>    ImageView news_photo;<br>    @Bind(R.id.news_title)<br>    TextView news_title;<br>    @Bind(R.id.news_desc)<br>    TextView news_desc;</p>
-<pre><code>@Bind(R.id.arrow_button)
-ArrowDownloadButton arrowButton;
-
-public InfosViewHolder(final View itemView) {
-    super(itemView);
-
-    ButterKnife.bind(this, itemView);
-    //设置TextView背景为半透明
-    news_title.setBackgroundColor(Color.argb(20, 0, 0, 0));
-}
-</code></pre><p>}`</p>
+<h3 id="RecyclerView强制使用ViewHolder"><a href="#RecyclerView强制使用ViewHolder" class="headerlink" title="RecyclerView强制使用ViewHolder."></a>RecyclerView强制使用ViewHolder.</h3><p><code>//自定义ViewHolder类 进行视图绑定
+static class InfosViewHolder extends RecyclerView.ViewHolder {
+    @Bind(R.id.cardView)
+    CardView cardView;
+    @Bind(R.id.news_photo)
+    ImageView news_photo;
+    @Bind(R.id.news_title)
+    TextView news_title;
+    @Bind(R.id.news_desc)
+    TextView news_desc;
+    @Bind(R.id.arrow_button)
+    ArrowDownloadButton arrowButton;
+    public InfosViewHolder(final View itemView) {
+        super(itemView);        
+        ButterKnife.bind(this, itemView);
+        //设置TextView背景为半透明
+        news_title.setBackgroundColor(Color.argb(20, 0, 0, 0));
+    }
+}</code></p>
 <blockquote>
 <p>在onCreateViewHolder方法, 创建类; 在onBindViewHolder方法, 绑定数据.</p>
 </blockquote>
@@ -355,13 +381,8 @@ public InfosViewHolder(final View itemView) {
 <li>implements Serializable 的范类才可以进行Intent传送</li>
 </ul>
 <p><code>Intent intent = getIntent();
-Infos item = (Infos) intent.getSerializableExtra(&quot;Infos&quot;);</code></p>
-<ul>
-<li><p>理解ViewHolder的加载模式</p>
-</li>
-<li><p>Handler灵活应用</p>
-</li>
-</ul>
+Infos item = (Infos) intent.getSerializableExtra(&quot;Infos&quot;);</code><br>*理解ViewHolder的加载模式</p>
+<p>*Handler灵活应用</p>
 </span>
       
     </div>
