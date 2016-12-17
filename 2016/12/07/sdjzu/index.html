@@ -1,0 +1,679 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="Python爬虫实战之学习成绩ox1模拟登录学生成绩管理系统首先进入学校官网可以看到学校官网的登录并不需要验证码，这对我们的模拟登录可谓是非常便利，接下来点击登录按钮，在F12下的network可以看到指向的地址是http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal最主要的内容，我们可以发现有一个表单提交的过程，提交方式为POST，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python爬虫实战之学习成绩">
+<meta property="og:url" content="http://yoursite.com/2016/12/07/sdjzu/index.html">
+<meta property="og:site_name" content="代码如诗">
+<meta property="og:description" content="Python爬虫实战之学习成绩ox1模拟登录学生成绩管理系统首先进入学校官网可以看到学校官网的登录并不需要验证码，这对我们的模拟登录可谓是非常便利，接下来点击登录按钮，在F12下的network可以看到指向的地址是http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal最主要的内容，我们可以发现有一个表单提交的过程，提交方式为POST，">
+<meta property="og:image" content="http://p1.bpimg.com/567571/b3df1309cb9c92b7.png">
+<meta property="og:image" content="http://p1.bpimg.com/567571/05ebb1f22234d5fe.png">
+<meta property="og:image" content="http://p1.bpimg.com/567571/6b8ee5d7877a704f.png">
+<meta property="og:image" content="http://p1.bpimg.com/567571/c13bebc5c1200303.png">
+<meta property="og:image" content="http://p1.bpimg.com/567571/05949cdb929a573b.png">
+<meta property="og:image" content="http://p1.bpimg.com/567571/da06945a0b7cf25c.png">
+<meta property="og:updated_time" content="2016-12-17T14:43:36.678Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python爬虫实战之学习成绩">
+<meta name="twitter:description" content="Python爬虫实战之学习成绩ox1模拟登录学生成绩管理系统首先进入学校官网可以看到学校官网的登录并不需要验证码，这对我们的模拟登录可谓是非常便利，接下来点击登录按钮，在F12下的network可以看到指向的地址是http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal最主要的内容，我们可以发现有一个表单提交的过程，提交方式为POST，">
+<meta name="twitter:image" content="http://p1.bpimg.com/567571/b3df1309cb9c92b7.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/07/sdjzu/"/>
+
+
+  <title> Python爬虫实战之学习成绩 | 代码如诗 </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">代码如诗</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">IM Shen</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Python爬虫实战之学习成绩
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-12-07T10:09:29+08:00" content="2016-12-07">
+              2016-12-07
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/12/07/sdjzu/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/07/sdjzu/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Python爬虫实战之学习成绩"><a href="#Python爬虫实战之学习成绩" class="headerlink" title="Python爬虫实战之学习成绩"></a>Python爬虫实战之学习成绩</h1><h2 id="ox1模拟登录学生成绩管理系统"><a href="#ox1模拟登录学生成绩管理系统" class="headerlink" title="ox1模拟登录学生成绩管理系统"></a>ox1模拟登录学生成绩管理系统</h2><p>首先进入学校官网<br><img src="http://p1.bpimg.com/567571/b3df1309cb9c92b7.png" alt=""><br>可以看到学校官网的登录并不需要验证码，这对我们的模拟登录可谓是非常便利，接下来点击登录按钮，在F12下的network可以看到指向的地址是<a href="http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal" target="_blank" rel="external">http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal</a><br><img src="http://p1.bpimg.com/567571/05ebb1f22234d5fe.png" alt=""><br>最主要的内容，我们可以发现有一个表单提交的过程，提交方式为POST，两个参数分别为userName和password。<br>不过我们并不知道是否对header进行检查，我们先不管这么多，先尝试一下模拟登录并保存Cookie。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SDU</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.loginUrl = <span class="string">'http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal'</span></div><div class="line">        self.cookies = cookielib.CookieJar()</div><div class="line">        self.postdata = urllib.urlencode(&#123;</div><div class="line">            <span class="string">'userName'</span>:<span class="string">'20141115025'</span>,</div><div class="line">            <span class="string">'password'</span>:<span class="string">'*****'</span></div><div class="line">         &#125;)</div><div class="line">        self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookies))</div><div class="line">        self.grades = []</div><div class="line">        self.count=[]</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPage</span><span class="params">(self)</span>:</span></div><div class="line">        request  = urllib2.Request(</div><div class="line">            url = self.loginUrl,</div><div class="line">            data = self.postdata)</div><div class="line">        result = self.opener.open(request)</div><div class="line">        <span class="keyword">print</span> result.read().decode(<span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line"></div><div class="line">sdu = SDU()</div><div class="line">sdu.getPage()</div></pre></td></tr></table></figure></p>
+<p><img src="http://p1.bpimg.com/567571/6b8ee5d7877a704f.png" alt=""><br>通过打印的信息我们可以看到我们是登录成功了的，接下来我们要做的就是抓取成绩了。</p>
+<h2 id="ox2-抓取成绩"><a href="#ox2-抓取成绩" class="headerlink" title="ox2 抓取成绩"></a>ox2 抓取成绩</h2><p><img src="http://p1.bpimg.com/567571/c13bebc5c1200303.png" alt=""><br>再次通过F12我们可以看到查询成绩指向的地址是<a href="http://jwfw1.sdjzu.edu.cn/ssfw/zhcx/cjxx.do" target="_blank" rel="external">http://jwfw1.sdjzu.edu.cn/ssfw/zhcx/cjxx.do</a><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SDU</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.loginUrl = <span class="string">'http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal'</span></div><div class="line">        self.gradeUrl = <span class="string">'http://jwfw1.sdjzu.edu.cn/ssfw/zhcx/cjxx.do'</span></div><div class="line">        self.cookies = cookielib.CookieJar()</div><div class="line">        self.postdata = urllib.urlencode(&#123;</div><div class="line">            <span class="string">'userName'</span>:<span class="string">'20141115025'</span>,</div><div class="line">            <span class="string">'password'</span>:<span class="string">'*****'</span></div><div class="line">         &#125;)</div><div class="line">        self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookies))</div><div class="line">        self.grades = []</div><div class="line">        self.count=[]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPage</span><span class="params">(self)</span>:</span></div><div class="line">        request  = urllib2.Request(</div><div class="line">            url = self.loginUrl,</div><div class="line">            data = self.postdata)</div><div class="line">        result = self.opener.open(request)</div><div class="line">        result = self.opener.open(self.gradeUrl)</div><div class="line">        <span class="keyword">print</span> result.read().decode(<span class="string">'utf-8'</span>)</div><div class="line">sdu = SDU()</div><div class="line">sdu.getPage()</div></pre></td></tr></table></figure></p>
+<p><img src="http://p1.bpimg.com/567571/05949cdb929a573b.png" alt=""><br>从打印的信息可以看到我们抓取的内容是正确的，接下来用正则表达式提取一下就可以获得我们的有效信息了</p>
+<h2 id="ox3提取有效信息"><a href="#ox3提取有效信息" class="headerlink" title="ox3提取有效信息"></a>ox3提取有效信息</h2><p>接下来我们就把页面内容提取一下。</p>
+<p>我们可以发现每一科都是TR标签，然后是一系列的td标签<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">&lt;tr class=&quot;t_con&quot;&gt;</div><div class="line">			              	  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;2&lt;/td&gt;</div><div class="line">			                  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;2015-2016 第二学期&lt;/td&gt;</div><div class="line">			                  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;JS020009&lt;/td&gt;</div><div class="line">			                  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;数据库原理及应用B&lt;/td&gt;</div><div class="line">			                  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;专业基础必修课&lt;/td&gt;</div><div class="line">			                   &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;&lt;/td&gt;</div><div class="line">			                  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;必修&amp;nbsp;&lt;/td&gt;</div><div class="line">			                  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;2.0&lt;/td&gt;</div><div class="line">			                  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;</div><div class="line">			                  	    </div><div class="line">			                  	      </div><div class="line">			                  	        </div><div class="line">			                  	        </div><div class="line">				                  	          </div><div class="line">							                  		  </div><div class="line">							                  		  	</div><div class="line">							                  			&lt;span&gt;&lt;strong&gt;82.6&lt;/strong&gt;&lt;/span&gt;</div><div class="line">							                  		  </div><div class="line">							                  </div><div class="line">							                  </div><div class="line">			                  	        </div><div class="line">			                  	      </div><div class="line">			     </div><div class="line">				                  </div><div class="line">								 </div><div class="line">			                  &lt;/td&gt;</div><div class="line">			                  &lt;!-- </div><div class="line">			                  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;3.26&amp;nbsp;&lt;/td&gt;</div><div class="line">			                   --&gt;</div><div class="line">			                  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;&amp;nbsp;&lt;/td&gt;</div><div class="line">			                  &lt;!-- </div><div class="line">				              &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;</div><div class="line">			                  	  </div><div class="line">			                  		</div><div class="line">			                  			&lt;span&gt;无&lt;/span&gt;</div><div class="line">			                  		</div><div class="line">			                  		</div><div class="line">			                  	 </div><div class="line">				             &lt;/td&gt;</div><div class="line">				              --&gt;</div><div class="line">			                 &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;</div><div class="line">			                    </div><div class="line">			                        </div><div class="line">			                 &lt;/td&gt;</div><div class="line">			              &lt;/tr&gt;</div></pre></td></tr></table></figure></p>
+<p>我们用下面的正则表达式进行提取即可，部分代码如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">myItems= re.findall(<span class="string">'&lt;tr class="t_con"&gt;.*?&lt;td.*?&lt;td.*?&lt;td.*?&lt;td.*?&gt;(.*?)&lt;/td&gt;.*?&lt;td.*?&lt;td.*?&lt;td.*?&lt;td.*?&lt;td.*?&gt;(.*?)&lt;/td&gt;.*?&lt;/tr&gt;'</span></div><div class="line">                         ,page,re.S)</div><div class="line">     <span class="keyword">for</span> item <span class="keyword">in</span> myItems:</div><div class="line">         self.grades.append(item[<span class="number">0</span>].encode(<span class="string">'utf-8'</span>))</div><div class="line">         self.count.append(item[<span class="number">1</span>])</div><div class="line">     s=<span class="string">'.'</span>.join(self.count)</div><div class="line">     it=[n <span class="keyword">for</span> n <span class="keyword">in</span> re.findall(<span class="string">r'(\d+(\.\d+)?)'</span>, s)]</div></pre></td></tr></table></figure></p>
+<p>主要利用了findall方法,但是由于我们得到的成绩为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;span&gt;&lt;strong&gt;82.6&lt;/strong&gt;&lt;/span&gt;</div></pre></td></tr></table></figure></p>
+<p>所以我们将得到的列表转化成字符串再通过正则表达式提取<br>得到的学分和分数我们都用列表list进行存储，所以用了 append 方法，每获取到一个信息就把它加进去。</p>
+<h2 id="ox4整理输出"><a href="#ox4整理输出" class="headerlink" title="ox4整理输出"></a>ox4整理输出</h2><p>由于我们现在在列表中了，只需输出就可以了，整理代码如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">import</span> urllib</div><div class="line"><span class="keyword">import</span> urllib2</div><div class="line"><span class="keyword">import</span> cookielib</div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line"></div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SDU</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.loginUrl = <span class="string">'http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal'</span></div><div class="line">        self.gradeUrl = <span class="string">'http://jwfw1.sdjzu.edu.cn/ssfw/zhcx/cjxx.do'</span></div><div class="line">        self.cookies = cookielib.CookieJar()</div><div class="line">        self.postdata = urllib.urlencode(&#123;</div><div class="line">            <span class="string">'userName'</span>:<span class="string">'20141115025'</span>,</div><div class="line">            <span class="string">'password'</span>:<span class="string">'043994'</span></div><div class="line">         &#125;)</div><div class="line">        self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookies))</div><div class="line">        self.grades = []</div><div class="line">        self.count=[]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPage</span><span class="params">(self)</span>:</span></div><div class="line">        request = urllib2.Request(</div><div class="line">            url=self.loginUrl,</div><div class="line">            data=self.postdata)</div><div class="line">        result = self.opener.open(request)</div><div class="line">        result = self.opener.open(self.gradeUrl)</div><div class="line">        <span class="keyword">return</span> result.read().decode(<span class="string">'utf-8'</span>)</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getGrades</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment"># 获得本学期成绩页面</span></div><div class="line">        page = self.getPage()</div><div class="line">        <span class="comment"># print  page</span></div><div class="line">        myItems= re.findall(<span class="string">'&lt;tr class="t_con"&gt;.*?&lt;td.*?&lt;td.*?&lt;td.*?&lt;td.*?&gt;(.*?)&lt;/td&gt;.*?&lt;td.*?&lt;td.*?&lt;td.*?&lt;td.*?&lt;td.*?&gt;(.*?)&lt;/td&gt;.*?&lt;/tr&gt;'</span></div><div class="line">                            ,page,re.S)</div><div class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> myItems:</div><div class="line">            self.grades.append(item[<span class="number">0</span>].encode(<span class="string">'utf-8'</span>))</div><div class="line">            self.count.append(item[<span class="number">1</span>])</div><div class="line">        s=<span class="string">'.'</span>.join(self.count)</div><div class="line">        it=[n <span class="keyword">for</span> n <span class="keyword">in</span> re.findall(<span class="string">r'(\d+(\.\d+)?)'</span>, s)]</div><div class="line">        <span class="keyword">for</span> w <span class="keyword">in</span> range(len(it)):</div><div class="line">            <span class="keyword">print</span> <span class="string">"课程名称：   "</span>.encode(<span class="string">"utf-8"</span>)+self.grades[w]+<span class="string">"     成绩:"</span>.encode(<span class="string">"utf-8"</span>)+it[w][<span class="number">0</span>]</div><div class="line"></div><div class="line"></div><div class="line">sdu = SDU()</div><div class="line">sdu.getGrades()</div></pre></td></tr></table></figure></p>
+<p>输出信息如下：<br><img src="http://p1.bpimg.com/567571/da06945a0b7cf25c.png" alt=""><br>好，最后就会打印输出本学期绩点是多少，小伙伴们最主要的了解上面的编程思路就好。</p>
+<p>最主要的内容就是Cookie的使用，模拟登录的功能。</p>
+<p>本文思路参考来源：<a href="http://blog.csdn.net/pleasecallmewhy/article/details/9305229" target="_blank" rel="external">汪海的爬虫</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag">#Python</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/04/haappy/" rel="next" title="啊我22岁了">
+                <i class="fa fa-chevron-left"></i> 啊我22岁了
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/07/sdjzu/"
+           data-title="Python爬虫实战之学习成绩" data-url="http://yoursite.com/2016/12/07/sdjzu/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="shenxj" />
+          <p class="site-author-name" itemprop="name">shenxj</p>
+          <p class="site-description motion-element" itemprop="description">代码如诗</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/wenlou" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/2275107904" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/chen-xiao-jian-81" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Python爬虫实战之学习成绩"><span class="nav-number">1.</span> <span class="nav-text">Python爬虫实战之学习成绩</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ox1模拟登录学生成绩管理系统"><span class="nav-number">1.1.</span> <span class="nav-text">ox1模拟登录学生成绩管理系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ox2-抓取成绩"><span class="nav-number">1.2.</span> <span class="nav-text">ox2 抓取成绩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ox3提取有效信息"><span class="nav-number">1.3.</span> <span class="nav-text">ox3提取有效信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ox4整理输出"><span class="nav-number">1.4.</span> <span class="nav-text">ox4整理输出</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shenxj</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"imshen"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
