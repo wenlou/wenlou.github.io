@@ -318,7 +318,7 @@
 
       
         
-          <h1 id="Python爬虫实战之学习成绩"><a href="#Python爬虫实战之学习成绩" class="headerlink" title="Python爬虫实战之学习成绩"></a>Python爬虫实战之学习成绩</h1><h2 id="ox1模拟登录学生成绩管理系统"><a href="#ox1模拟登录学生成绩管理系统" class="headerlink" title="ox1模拟登录学生成绩管理系统"></a>ox1模拟登录学生成绩管理系统</h2><p>首先进入学校官网<br><img src="http://ww4.sinaimg.cn/large/879b6440jw1fau6oxbgovj21go0nigx1.jpg" alt=""><br>可以看到学校官网的登录并不需要验证码，这对我们的模拟登录可谓是非常便利，接下来点击登录按钮，在F12下的network可以看到指向的地址是<a href="http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal">http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal</a><br><img src="http://ww3.sinaimg.cn/large/879b6440jw1fau6pfefc1j21fb0k30wy.jpg" alt=""><br>最主要的内容，我们可以发现有一个表单提交的过程，提交方式为POST，两个参数分别为userName和password。<br>不过我们并不知道是否对header进行检查，我们先不管这么多，先尝试一下模拟登录并保存Cookie。</p>
+          <h2 id="ox1模拟登录学生成绩管理系统"><a href="#ox1模拟登录学生成绩管理系统" class="headerlink" title="ox1模拟登录学生成绩管理系统"></a>ox1模拟登录学生成绩管理系统</h2><p>首先进入学校官网<br><img src="http://ww4.sinaimg.cn/large/879b6440jw1fau6oxbgovj21go0nigx1.jpg" alt=""><br>可以看到学校官网的登录并不需要验证码，这对我们的模拟登录可谓是非常便利，接下来点击登录按钮，在F12下的network可以看到指向的地址是<a href="http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal">http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal</a><br><img src="http://ww3.sinaimg.cn/large/879b6440jw1fau6pfefc1j21fb0k30wy.jpg" alt=""><br>最主要的内容，我们可以发现有一个表单提交的过程，提交方式为POST，两个参数分别为userName和password。<br>不过我们并不知道是否对header进行检查，我们先不管这么多，先尝试一下模拟登录并保存Cookie。</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/12/17/sdjzu/#more" rel="contents">
               阅读全文 &raquo;
