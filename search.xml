@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+    
+    <entry>
+      <title><![CDATA[Python爬虫实战之学习成绩]]></title>
+      <url>http://yoursite.com/2016/12/17/sdjzu/</url>
+      <content type="html"><![CDATA[<h2 id="ox1模拟登录学生成绩管理系统"><a href="#ox1模拟登录学生成绩管理系统" class="headerlink" title="ox1模拟登录学生成绩管理系统"></a>ox1模拟登录学生成绩管理系统</h2><p>首先进入学校官网<br><img src="http://ww4.sinaimg.cn/large/879b6440jw1fau6oxbgovj21go0nigx1.jpg" alt=""><br>可以看到学校官网的登录并不需要验证码，这对我们的模拟登录可谓是非常便利，接下来点击登录按钮，在F12下的network可以看到指向的地址是<a href="http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal" target="_blank" rel="external">http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal</a><br><img src="http://ww3.sinaimg.cn/large/879b6440jw1fau6pfefc1j21fb0k30wy.jpg" alt=""><br>最主要的内容，我们可以发现有一个表单提交的过程，提交方式为POST，两个参数分别为userName和password。<br>不过我们并不知道是否对header进行检查，我们先不管这么多，先尝试一下模拟登录并保存Cookie。</p>
+<a id="more"></a>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SDU</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.loginUrl = <span class="string">'http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal'</span></div><div class="line">        self.cookies = cookielib.CookieJar()</div><div class="line">        self.postdata = urllib.urlencode(&#123;</div><div class="line">            <span class="string">'userName'</span>:<span class="string">'20141115025'</span>,</div><div class="line">            <span class="string">'password'</span>:<span class="string">'*****'</span></div><div class="line">         &#125;)</div><div class="line">        self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookies))</div><div class="line">        self.grades = []</div><div class="line">        self.count=[]</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPage</span><span class="params">(self)</span>:</span></div><div class="line">        request  = urllib2.Request(</div><div class="line">            url = self.loginUrl,</div><div class="line">            data = self.postdata)</div><div class="line">        result = self.opener.open(request)</div><div class="line">        <span class="keyword">print</span> result.read().decode(<span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line"></div><div class="line">sdu = SDU()</div><div class="line">sdu.getPage()</div></pre></td></tr></table></figure>
+<p><img src="http://ww2.sinaimg.cn/large/879b6440jw1fau6pr48gnj213g0f1gqd.jpg" alt=""><br>通过打印的信息我们可以看到我们是登录成功了的，接下来我们要做的就是抓取成绩了。</p>
+<h2 id="ox2-抓取成绩"><a href="#ox2-抓取成绩" class="headerlink" title="ox2 抓取成绩"></a>ox2 抓取成绩</h2><p><img src="http://ww2.sinaimg.cn/large/879b6440jw1fau6qu3szbj21ap0ow7an.jpg" alt=""><br>再次通过F12我们可以看到查询成绩指向的地址是<a href="http://jwfw1.sdjzu.edu.cn/ssfw/zhcx/cjxx.do" target="_blank" rel="external">http://jwfw1.sdjzu.edu.cn/ssfw/zhcx/cjxx.do</a><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SDU</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.loginUrl = <span class="string">'http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal'</span></div><div class="line">        self.gradeUrl = <span class="string">'http://jwfw1.sdjzu.edu.cn/ssfw/zhcx/cjxx.do'</span></div><div class="line">        self.cookies = cookielib.CookieJar()</div><div class="line">        self.postdata = urllib.urlencode(&#123;</div><div class="line">            <span class="string">'userName'</span>:<span class="string">'20141115025'</span>,</div><div class="line">            <span class="string">'password'</span>:<span class="string">'*****'</span></div><div class="line">         &#125;)</div><div class="line">        self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookies))</div><div class="line">        self.grades = []</div><div class="line">        self.count=[]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPage</span><span class="params">(self)</span>:</span></div><div class="line">        request  = urllib2.Request(</div><div class="line">            url = self.loginUrl,</div><div class="line">            data = self.postdata)</div><div class="line">        result = self.opener.open(request)</div><div class="line">        result = self.opener.open(self.gradeUrl)</div><div class="line">        <span class="keyword">print</span> result.read().decode(<span class="string">'utf-8'</span>)</div><div class="line">sdu = SDU()</div><div class="line">sdu.getPage()</div></pre></td></tr></table></figure></p>
+<p><img src="http://ww2.sinaimg.cn/large/879b6440jw1fau6r6uwl7j21480a878l.jpg" alt=""><br>从打印的信息可以看到我们抓取的内容是正确的，接下来用正则表达式提取一下就可以获得我们的有效信息了</p>
+<h2 id="ox3提取有效信息"><a href="#ox3提取有效信息" class="headerlink" title="ox3提取有效信息"></a>ox3提取有效信息</h2><p>接下来我们就把页面内容提取一下。</p>
+<p>我们可以发现每一科都是TR标签，然后是一系列的td标签<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">&lt;tr class=&quot;t_con&quot;&gt;</div><div class="line">  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;2&lt;/td&gt;</div><div class="line">  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;2015-2016 第二学期&lt;/td&gt;</div><div class="line">  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;JS020009&lt;/td&gt;</div><div class="line">  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;数据库原理及应用B&lt;/td&gt;</div><div class="line">  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;专业基础必修课&lt;/td&gt;</div><div class="line">  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;&lt;/td&gt;</div><div class="line">  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;必修&amp;nbsp;&lt;/td&gt;</div><div class="line">  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;2.0&lt;/td&gt;</div><div class="line">  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;</div><div class="line">		&lt;span&gt;&lt;strong&gt;82.6&lt;/strong&gt;&lt;/span&gt;</div><div class="line">			                  &lt;/td&gt;</div><div class="line">			                  &lt;!-- </div><div class="line">			                  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;3.26&amp;nbsp;&lt;/td&gt;</div><div class="line">			                   --&gt;</div><div class="line">			                  &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;&amp;nbsp;&lt;/td&gt;</div><div class="line">			                  &lt;!-- </div><div class="line">				              &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;</div><div class="line"></div><div class="line">			                  			&lt;span&gt;无&lt;/span&gt;</div><div class="line"></div><div class="line">				             &lt;/td&gt;</div><div class="line">				              --&gt;</div><div class="line">			                 &lt;td align=&quot;center&quot; valign=&quot;middle&quot;&gt;</div><div class="line">			                    </div><div class="line">			                        </div><div class="line">			                 &lt;/td&gt;</div><div class="line">			              &lt;/tr&gt;</div></pre></td></tr></table></figure></p>
+<p>我们用下面的正则表达式进行提取即可，部分代码如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">myItems= re.findall(<span class="string">'&lt;tr class="t_con"&gt;.*?&lt;td.*?&lt;td.*?&lt;td.*?&lt;td.*?&gt;(.*?)&lt;/td&gt;.*?&lt;td.*?&lt;td.*?&lt;td.*?&lt;td.*?&lt;td.*?&gt;(.*?)&lt;/td&gt;.*?&lt;/tr&gt;'</span></div><div class="line">                         ,page,re.S)</div><div class="line">     <span class="keyword">for</span> item <span class="keyword">in</span> myItems:</div><div class="line">         self.grades.append(item[<span class="number">0</span>].encode(<span class="string">'utf-8'</span>))</div><div class="line">         self.count.append(item[<span class="number">1</span>])</div><div class="line">     s=<span class="string">'.'</span>.join(self.count)</div><div class="line">     it=[n <span class="keyword">for</span> n <span class="keyword">in</span> re.findall(<span class="string">r'(\d+(\.\d+)?)'</span>, s)]</div></pre></td></tr></table></figure></p>
+<p>主要利用了findall方法,但是由于我们得到的成绩为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;span&gt;&lt;strong&gt;82.6&lt;/strong&gt;&lt;/span&gt;</div></pre></td></tr></table></figure></p>
+<p>所以我们将得到的列表转化成字符串再通过正则表达式提取<br>得到的学分和分数我们都用列表list进行存储，所以用了 append 方法，每获取到一个信息就把它加进去。</p>
+<h2 id="ox4整理输出"><a href="#ox4整理输出" class="headerlink" title="ox4整理输出"></a>ox4整理输出</h2><p>由于我们现在在列表中了，只需输出就可以了，整理代码如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">import</span> urllib</div><div class="line"><span class="keyword">import</span> urllib2</div><div class="line"><span class="keyword">import</span> cookielib</div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line"></div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SDU</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.loginUrl = <span class="string">'http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal'</span></div><div class="line">        self.gradeUrl = <span class="string">'http://jwfw1.sdjzu.edu.cn/ssfw/zhcx/cjxx.do'</span></div><div class="line">        self.cookies = cookielib.CookieJar()</div><div class="line">        self.postdata = urllib.urlencode(&#123;</div><div class="line">            <span class="string">'userName'</span>:<span class="string">'20141115025'</span>,</div><div class="line">            <span class="string">'password'</span>:<span class="string">'*****'</span></div><div class="line">         &#125;)</div><div class="line">        self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookies))</div><div class="line">        self.grades = []</div><div class="line">        self.count=[]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getPage</span><span class="params">(self)</span>:</span></div><div class="line">        request = urllib2.Request(</div><div class="line">            url=self.loginUrl,</div><div class="line">            data=self.postdata)</div><div class="line">        result = self.opener.open(request)</div><div class="line">        result = self.opener.open(self.gradeUrl)</div><div class="line">        <span class="keyword">return</span> result.read().decode(<span class="string">'utf-8'</span>)</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getGrades</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment"># 获得本学期成绩页面</span></div><div class="line">        page = self.getPage()</div><div class="line">        <span class="comment"># print  page</span></div><div class="line">        myItems= re.findall(<span class="string">'&lt;tr class="t_con"&gt;.*?&lt;td.*?&lt;td.*?&lt;td.*?&lt;td.*?&gt;(.*?)&lt;/td&gt;.*?&lt;td.*?&lt;td.*?&lt;td.*?&lt;td.*?&lt;td.*?&gt;(.*?)&lt;/td&gt;.*?&lt;/tr&gt;'</span></div><div class="line">                            ,page,re.S)</div><div class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> myItems:</div><div class="line">            self.grades.append(item[<span class="number">0</span>].encode(<span class="string">'utf-8'</span>))</div><div class="line">            self.count.append(item[<span class="number">1</span>])</div><div class="line">        s=<span class="string">'.'</span>.join(self.count)</div><div class="line">        it=[n <span class="keyword">for</span> n <span class="keyword">in</span> re.findall(<span class="string">r'(\d+(\.\d+)?)'</span>, s)]</div><div class="line">        <span class="keyword">for</span> w <span class="keyword">in</span> range(len(it)):</div><div class="line">            <span class="keyword">print</span> <span class="string">"课程名称：   "</span>.encode(<span class="string">"utf-8"</span>)+self.grades[w]+<span class="string">"     成绩:"</span>.encode(<span class="string">"utf-8"</span>)+it[w][<span class="number">0</span>]</div><div class="line"></div><div class="line"></div><div class="line">sdu = SDU()</div><div class="line">sdu.getGrades()</div></pre></td></tr></table></figure></p>
+<p>输出信息如下：<br><img src="http://ww3.sinaimg.cn/large/879b6440jw1fau6rf1k5ej20sr09sgqq.jpg" alt=""><br>好，最后就会打印输出本学期成绩是多少，小伙伴们最主要的了解上面的编程思路就好。</p>
+<p>最主要的内容就是Cookie的使用，模拟登录的功能。</p>
+<p>本文思路参考来源：<a href="http://blog.csdn.net/pleasecallmewhy/article/details/9305229" target="_blank" rel="external">汪海的爬虫</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[啊我22岁了]]></title>
+      <url>http://yoursite.com/2016/11/04/haappy/</url>
+      <content type="html"><![CDATA[<h1 id="啊我22岁了"><a href="#啊我22岁了" class="headerlink" title="啊我22岁了"></a>啊我22岁了</h1><p>许个愿吧——something to nothing<br><img src="http://i1.piimg.com/567571/34fc4e224dd41426.jpg" class="full-image"></p>
+<a id="more"></a>
+<h2 id="ox01"><a href="#ox01" class="headerlink" title="ox01"></a>ox01</h2><p>不管用什么语言，我们人生中都会有解释起来太困难的事。</p>
+<p>十八岁是一个节点，以前都一直会认为时间都走很慢，一直都盼着自己快点长大；十八岁之后，觉得时间就像握在手里的沙，眼睁睁看着流逝但是自己却无可奈何。现在我已经大三，并且已过半。昨年大二，明年大四，又到了该去思考自己的时候了。</p>
+<p>当我13、14岁的时候我告诉自己，要变得自信，变得霸气外露，变得具有领导能力，变得强强强王中王。当是事与愿违我是一个怕麻烦，没有领导能力的人。</p>
+<p>时间总是推着我们往前走。转眼之间已经到济南2个多年头了，当初刚离开家时的孤寂和冷漠现在还记忆犹新。慢慢的熟悉了济南的气候和饮食。也结交了一些算是志同道合的朋友。</p>
+<p>大三又是一个抉择的时刻。而我又是一个不善于抉择的人，还好我是一个有自知者明的人。努力充实自己，好好准备毕业，但愿自己能看到光明的未来。</p>
+<p>还好我找到了自己喜欢并愿意为之奋斗的兴趣——编程。自己构想了一个王国并看着它慢慢实现，真是人生一大幸事。</p>
+<h2 id="oxo2"><a href="#oxo2" class="headerlink" title="oxo2"></a>oxo2</h2><p>岂能尽如人意，但求无愧于心。——刘伯温</p>
+<p>自己总结自己过去的一年，发现大多都是讲的自己的人情世故与自我认知。盖莫是这一年在被点了快进的时候，更加放大日常生活中关乎交往的方面，同时遇到相应的问题也变得更多，在加速的过程中，对体会感情中的细腻会变得迟钝，后知后觉，所以最后自己才会如此感慨，人与人之间的关系，有时候可以厚如城墙，有时候也可以薄如宣纸。</p>
+<p>其实很多事情不去计较就不会意识到得到有多高兴失去有多难过，只要用了真心那一定不会有任何差错。</p>
+<h2 id="oxo3"><a href="#oxo3" class="headerlink" title="oxo3"></a>oxo3</h2><p>最后祝自己生日快乐。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[《过程》——林白]]></title>
+      <url>http://yoursite.com/2016/09/25/shijv/</url>
+      <content type="html"><![CDATA[<p><img src="http://i1.piimg.com/567571/e7b2aa6274638973.jpg" class="full-image"><br><a id="more"></a></p>
+<hr>
+<p>一月你还没有出现 </p>
+<p>二月你睡在隔壁 </p>
+<p>三月下起了大雨 </p>
+<p>四月里遍地蔷薇 </p>
+<p>五月我们对面坐着 犹如梦中 就这样六月到了 </p>
+<p>六月里青草盛开 处处芬芳 </p>
+<p>七月，悲喜交加 麦浪翻滚连同草地 直到天涯 </p>
+<p>八月就是八月 </p>
+<p>八月我守口如瓶 八月里我是瓶中的水 你是青天的云 </p>
+<p>九月和十月 是两只眼睛，装满了大海 </p>
+<p>你在海上 我在海下 </p>
+<p>十一月尚未到来 </p>
+<p>透过它的窗口 我望见了十二月 </p>
+<p>十二月大雪弥漫</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Java基础复习——equals()和HashCode()]]></title>
+      <url>http://yoursite.com/2016/09/24/equals/</url>
+      <content type="html"><![CDATA[<h2 id="equals-的作用"><a href="#equals-的作用" class="headerlink" title="equals() 的作用"></a>equals() 的作用</h2><blockquote>
+<p>Indicates whether some other object is “equal to” this one.</p>
+</blockquote>
+<a id="more"></a>
+<p>equals()是用来 判断两个对象是否相等。</p>
+<p>equals() 定义在 JDK 的 Object.java 中。通过判断两个对象的地址是否相等(即，是否是同一个对象)来区分它们是否相等。源码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> (<span class="keyword">this</span> == obj);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>既然是在 Object 类中定义了该方法，就表明了 Java 所有类都实现了 equals() 方法，所以所有类都可以通过该方法去判断两个对象是否相等。<br>默认的 equals（） 方法等同于 ”==” 方法，所以我们一般会重写 equals（） 方法 —-&gt; 两个对象的内容相等，返回 true ，否则返回 false。</p>
+<p>所以我们可以根据是否 重写 equals() 方法将类分为两类：</p>
+<p>1.若某个类没有覆盖 equals() 方法，当它的通过 equals() 比较两个对象时，实际上是比较两个对象是不是同一个对象。这时，等价于通过“==”去比较这两个对象</p>
+<p>2.覆盖类的 equals() 方法，来让 equals() 通过其它方式比较两个对象是否相等。通常的做法是：若两个对象的内容相等，则 equals()方法返回true；否则，返回 false 。</p>
+<h3 id="没有覆盖-equals-方法"><a href="#没有覆盖-equals-方法" class="headerlink" title="没有覆盖 equals() 方法"></a>没有覆盖 equals() 方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HashcodeAndEquals</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">out</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		System.out.println(t);</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="comment">// 实例化两个 Person 对象</span></div><div class="line">		Person p1 = <span class="keyword">new</span> Person(<span class="string">"小明"</span>, <span class="number">12</span>);</div><div class="line">		Person p2 = <span class="keyword">new</span> Person(<span class="string">"小明"</span>, <span class="number">12</span>);</div><div class="line">		<span class="comment">// 通过 equals() 比较他们是否相等</span></div><div class="line">		out(p1.equals(p2));</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</div><div class="line">		<span class="keyword">int</span> age;</div><div class="line">		String name;</div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, <span class="keyword">int</span> age)</span> </span>&#123;</div><div class="line">			<span class="keyword">this</span>.age = age;</div><div class="line">			<span class="keyword">this</span>.name = name;</div><div class="line">		&#125;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">			<span class="keyword">return</span> name + <span class="string">"--- age:"</span> + age;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>输出为<br>false</p>
+</blockquote>
+<p>结论：</p>
+<blockquote>
+<p>当我们使用 p1.equals(p2) 来比较 p1 和 p2 是否相等时，实际上是调用了 object 类的 equals() 方法，即 “p1==p2”，它是比较 p1 和 p2 是否为一个对象。由定义可知，p1 和 p2 虽然内容相同，但是它们是两个不同的对象。因此，返回 false 。</p>
+</blockquote>
+<h3 id="覆盖-equals-方法"><a href="#覆盖-equals-方法" class="headerlink" title="覆盖 equals() 方法"></a>覆盖 equals() 方法</h3><p>我们简单修改下 HashcodeAndEquals.java 文件，覆盖 equals() 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HashcodeAndEquals</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">out</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		System.out.println(t);</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="comment">// 实例化两个 Person 对象</span></div><div class="line">		Person p1 = <span class="keyword">new</span> Person(<span class="string">"小明"</span>, <span class="number">12</span>);</div><div class="line">		Person p2 = <span class="keyword">new</span> Person(<span class="string">"小明"</span>, <span class="number">12</span>);</div><div class="line">		<span class="comment">// 通过 equals() 比较他们是否相等</span></div><div class="line">		out(p1.equals(p2));</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</div><div class="line">		<span class="keyword">int</span> age;</div><div class="line">		String name;</div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, <span class="keyword">int</span> age)</span> </span>&#123;</div><div class="line">			<span class="keyword">this</span>.age = age;</div><div class="line">			<span class="keyword">this</span>.name = name;</div><div class="line">		&#125;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">			<span class="keyword">return</span> name + <span class="string">"--- age:"</span> + age;</div><div class="line">		&#125;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">			<span class="keyword">if</span> (obj == <span class="keyword">null</span>) &#123;</div><div class="line">				<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="comment">// 如果是同一对象，返回 true</span></div><div class="line">			<span class="keyword">if</span> (<span class="keyword">this</span> == obj) &#123;</div><div class="line">				<span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="comment">// 判断是否类型相同</span></div><div class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.getClass() != obj.getClass()) &#123;</div><div class="line">				<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">			&#125;</div><div class="line">          	<span class="comment">// 只有一下三种情况才能通过编译</span></div><div class="line">			<span class="comment">// 1.instanceof前面的类型与后面的类型相同</span></div><div class="line">			<span class="comment">// 2.instanceof前面的类型是后面的类型父类</span></div><div class="line">			<span class="comment">// 3.instanceof前面的类型是后面的类型子类</span></div><div class="line">			<span class="comment">// 故与我们判断类型相同有一点偏差</span></div><div class="line">			<span class="comment">//</span></div><div class="line">          	<span class="comment">// 这一点我们可以自己定义一个 Student 类继承 Person 类来进行实验</span></div><div class="line">			<span class="comment">// if (!(obj instanceof Person)) &#123;</span></div><div class="line">			<span class="comment">// return false;</span></div><div class="line">			<span class="comment">// &#125;</span></div><div class="line">			Person per = (Person) obj;</div><div class="line">			<span class="keyword">return</span> name.equals(per.name) &amp;&amp; age == per.age;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>输出为<br>true</p>
+</blockquote>
+<p>结论：</p>
+<blockquote>
+<p>我们在新的 HashcodeAndEquals.java 文件中重写了 Person 类的 equals() 函数：当两个 Person 对象 name 和 age 都相等时，则返回 true ，因此结果为 true 。</p>
+</blockquote>
+<h3 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h3><blockquote>
+<p>Java 对 equals() 的要求</p>
+</blockquote>
+<ol>
+<li>对称性：如果 x.equals(y) 返回是” true “，那么 y.equals(x) 也应该返回是”true”。</li>
+<li>反射性：x.equals(x) 必须返回是 “true” 。</li>
+<li>类推性：如果 x.equals(y) 返回是”true”，而且 y.equals(z) 返回是”true”，那么 z.equals(x) 也应该返回是”true”。</li>
+<li>一致性：如果 x.equals(y) 返回是”true”，只要x和y内容一直不变，不管你重复 x.equals(y) 多少次，返回都是”true”。</li>
+<li>非空性，x.equals(null)，永远返回是”false”；x.equals (和x不同类型的对象)永远返回是”false”。</li>
+</ol>
+<h2 id="0x02-equals-与-的区别"><a href="#0x02-equals-与-的区别" class="headerlink" title="0x02 equals() 与 == 的区别"></a>0x02 equals() 与 == 的区别</h2><p>equals() : 它的作用也是判断两个对象是否相等。但它一般有两种使用情况(前面第1部分已详细介绍过)</p>
+<p>== : 它的作用是判断两个对象的地址是不是相等。即，判断两个对象是否为同一个对象。</p>
+<p>只用修改下HashcodeAndEquals.java 主函数为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    <span class="comment">// 实例化两个 Person 对象</span></div><div class="line">    Person p1 = <span class="keyword">new</span> Person(<span class="string">"小明"</span>, <span class="number">12</span>);</div><div class="line">    Person p2 = <span class="keyword">new</span> Person(<span class="string">"小明"</span>, <span class="number">12</span>);</div><div class="line">    <span class="comment">// 分别用 equals() 和 == 来判断</span></div><div class="line">    out(<span class="string">"equals: "</span> + p1.equals(p2));</div><div class="line">    out(<span class="string">"==: "</span> + (p1 == p2));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>输出为：<br>equals: true<br>==: false</p>
+</blockquote>
+<p>结果与我们预想的一样，因为我们是复写了 Person 类的 equals() 方法，而且 p1 p2 内容相同所以返回 true ，而 p1 p2 并是两个不同对象，所以 == 判断它们地址不相同，返回 false。</p>
+<h2 id="0x03-hashcode-的作用"><a href="#0x03-hashcode-的作用" class="headerlink" title="0x03 hashcode() 的作用"></a>0x03 hashcode() 的作用</h2><p>hashCode() 的作用是获取哈希码，也称为散列码；它实际上是返回一个int整数。这个哈希码的作用是确定该对象在哈希表中的索引位置。</p>
+<p>hashCode() 定义在 JDK 的 Object.java 中，这就意味着Java中的任何类都包含有 hashCode() 函数。</p>
+<p>虽然，每个 Java 类都包含 hashCode() 函数。但是，仅仅当创建并某个“类的散列表”(关于“散列表”见下面说明)时，该类的 hashCode() 才有用(作用是：确定该类的每一个对象在散列表中的位置；其它情况下(例如，创建类的单个对象，或者创建类的对象数组等等)，类的 hashCode() 没有作用。</p>
+<p>上面的散列表，指的是：Java集合中本质是散列表的类，如HashMap，Hashtable，HashSet。<br>也就是说：hashCode() 在散列表中才有用，在其它情况下没用。<br>在散列表中 hashCode() 的作用是获取对象的散列码，进而确定该对象在散列表中的位置。</p>
+<p>散列码的解释：</p>
+<blockquote>
+<p>我们都知道，散列表存储的是键值对(key-value)，它的特点是：能根据“键”快速的检索出对应的“值”。这其中就利用到了散列码！<br>散列表的本质是通过数组实现的。当我们要获取散列表中的某个“值”时，实际上是要获取数组中的某个位置的元素。而数组的位置，就是通过“键”来获取的；更进一步说，数组的位置，是通过“键”对应的散列码计算得到的。</p>
+</blockquote>
+<p>我们以 Hashset 为例来说明下 hashcode() 的作用：<br>首先我们都知道 HashSet 是 Set 的集合，不允许有重复的元素。当该 Set 已经有了 1000 个元素时，当插入第1001个元素时，需要怎么处理？ “将第1001个元素逐个的和前面1000个元素进行比较”？显然，这个效率是相等低下的。散列表很好的解决了这个问题，它根据元素的散列码计算出元素在散列表中的位置，然后将元素插入该位置即可。对于相同的元素，自然是只保存了一个。由此可知，若两个元素相等，它们的散列码一定相等；但反过来确不一定。<br>在散列表中，</p>
+<p>如果两个对象相等，那么它们的hashCode()值一定要相同；<br>如果两个对象hashCode()相等，它们并不一定相等。<br>注意：这是在散列表中的情况。在非散列表中一定如此！</p>
+<h2 id="0x04-hashCode-和-equals-的关系"><a href="#0x04-hashCode-和-equals-的关系" class="headerlink" title="0x04 hashCode() 和 equals() 的关系"></a>0x04 hashCode() 和 equals() 的关系</h2><p>我们修改主函数为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    Person p1 = <span class="keyword">new</span> Person(<span class="string">"小明"</span>, <span class="number">12</span>);</div><div class="line">    <span class="comment">// HashMap</span></div><div class="line">    HashMap&lt;Person, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">    map.put(p1, <span class="number">1</span>);</div><div class="line">    out(map.get(<span class="keyword">new</span> Person(<span class="string">"小明"</span>, <span class="number">12</span>)));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>按照理想中，我们输出的结果应该为 “1”，因为我们存入的 Person 和查找的 Person 都是“小明”，是同一个人。<br>但是最终运行该程序输出结果为：</p>
+<blockquote>
+<p>null</p>
+</blockquote>
+<p>所以按照设计标准我们应该在重写 equals() 方法的同时也要写重写 hashcode()。</p>
+<p>虽然通过重写equals方法使得逻辑上姓名和年龄相同的两个对象被判定为相等的对象（跟String类类似），但是要知道默认情况下，hashCode 方法是将对象的存储地址进行映射。那么上述代码的输出结果为“null”就不足为奇了。</p>
+<p>因为 p1 对象和 new Person(“小明”, 12) 生成的对象是两个不同的对象，它们的存储地址肯定不同，所以得到的 hashcode 值不同（不绝对，因为有哈希冲突的情况）。</p>
+<p>所以现在重写下我们的 Person 类的 hashcode() 方法，利用 eclipse 自动生成如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> prime = <span class="number">31</span>;</div><div class="line">    <span class="keyword">int</span> result = <span class="number">1</span>;</div><div class="line">    result = prime * result + age;</div><div class="line">    result = prime * result + ((name == <span class="keyword">null</span>) ? <span class="number">0</span> : name.hashCode());</div><div class="line">    <span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在我们再次运行程序得到结果：</p>
+<blockquote>
+<p>1</p>
+</blockquote>
+<p>与预期一致。</p>
+<p>摘自Effective Java一书：</p>
+<blockquote>
+<ul>
+<li>在程序执行期间，只要equals方法的比较操作用到的信息没有被修改，那么对这同一个对象调用多次，hashCode方法必须始终如一地返回同一个整数。</li>
+<li>如果两个对象根据equals方法比较是相等的，那么调用两个对象的hashCode方法必须返回相同的整数结果。</li>
+<li>如果两个对象根据equals方法比较是不等的，则hashCode方法不一定得返回不同的整数。</li>
+</ul>
+</blockquote>
+<p>对于第一条，我们通过一个例子来验证：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    Person p1 = <span class="keyword">new</span> Person(<span class="string">"小明"</span>, <span class="number">12</span>);</div><div class="line">    out(<span class="string">"初始值："</span> + p1.hashCode());</div><div class="line">    HashMap&lt;Person, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">    map.put(p1, <span class="number">1</span>);</div><div class="line">    p1.age = <span class="number">13</span>;</div><div class="line">    out(<span class="string">"更新后："</span> + p1.hashCode());</div><div class="line">    out(map.get(p1));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>输出结果为：</p>
+<blockquote>
+<p>初始值：758036<br>更新后：758067<br>null</p>
+</blockquote>
+<p>其中原因我就不用多说了，因此，在设计 hashCode 方法和 equals 方法的时候，如果对象中的数据易变，则最好在 equals 方法和 hashCode 方法中不要依赖于该字段。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[刮秋风了]]></title>
+      <url>http://yoursite.com/2016/08/29/qiufeng/</url>
+      <content type="html"><![CDATA[<p><img src="http://ww4.sinaimg.cn/mw690/879b6440jw1f7az4hgf00j20go090dhq.jpg" class="full-image"><br><a id="more"></a></p>
+<p>嗯，跟去年的味道一样</p>
+<p>秋风</p>
+<p>如果秋风有年纪的话</p>
+<p>卧槽</p>
+<p>它一定很大很大了吧</p>
+<p>比水库的年纪要大<br>比长江大桥的年纪要大<br>可能比老槐树的年纪，还要大</p>
+<p>但也说不定</p>
+<p>在我的印象里</p>
+<p>它应该是比我大三个月的存在</p>
+<p>我出生在初冬</p>
+<p>之后的9个月后，才会刮起这种味道的秋风</p>
+<p>从小</p>
+<p>每次趴在阳台闻到秋风的味道</p>
+<p>就知道是时候恋恋不舍和夏天还有西瓜说明年再见了</p>
+<p>恩</p>
+<hr>
+<p>古代有很多“匠”吧</p>
+<p>木匠，铁匠，花匠，画匠，<br>织布匠，弹花匠，铸造匠，铲刀磨铁匠</p>
+<p>可要是把“匠”换成“酱”<br>。。。。。。</p>
+<p>“在下某某，是一个木酱。”</p>
+<p>“铁酱，这柄刀，可以锻吗？”<br>“你还是去城南找铸造酱吧。”</p>
+<p>“最近宫里新来了一个画酱，听说可讨皇后妃子们喜欢呢。”</p>
+<p>“我们是洛阳城的名门望族，世代都是名声大噪的弹花酱，怎么到你这儿，偏偏要当个铲刀磨铁酱呢？”</p>
+<p>哈哈哈<br>变好玩了吧</p>
+<hr>
+<p>近期的一个愿望</p>
+<p>想吃到好吃的月饼<br>想要吃月饼那天 是秋风舒爽的假期</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[情话——“我今天才知道耶”]]></title>
+      <url>http://yoursite.com/2016/07/13/qinghua/</url>
+      <content type="html"><![CDATA[<p><img src="http://ww4.sinaimg.cn/large/879b6440gw1f5rf5a6syaj21340qrdnt.jpg" class="full-image"><br><a id="more"></a></p>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="http://music.163.com/outchain/player?type=2&id=415792881&auto=0&height=66"></iframe>
+
+<blockquote>
+<p>我今天才知道耶，<br>想法太多的话脑细胞会在发梢上跳桑巴舞，<br>带鱼喝太多泡泡水会醉会变成愤怒的小鱼，<br>你家楼下小卖部的老爷爷其实是超级赛亚人来的，他说要保护地球保护我和你，<br>环湖公路一整条线上骑车，随时都能闻到抹茶味儿的空气，<br>游戏机里其实都藏着一个一边偷吃雪糕一边拿着傻瓜相机摆拍的小邻居，<br>世上再也没有比前一秒更难回去的过去，<br>界定了关系狗熊与兔子都不敢一起做游戏，<br>的士如果开得很快的话一定是在车尾巴上挂了三种颜色的气球，<br>每分钟里其实不止一份五颜六色的暧昧会变成彩虹在升起，<br>一去二三里之后不止能看到烟村还能看到去年不告而别的猫咪，<br>个性太强的金毛狗都会很讨厌狮子王里跟它一样嗷嗷叫的辛巴，<br>角色扮演类游戏里的NPC在你没走到他面前的时候一直在串门刷游戏，<br>落款的时候好想把每句话的第一个字，偷偷摘下来送给你。</p>
+</blockquote>
+<p>PS:形式不是原创，感觉很有趣。这样可以写很多东西。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[假如身边的东西会说话]]></title>
+      <url>http://yoursite.com/2016/06/28/tell/</url>
+      <content type="html"><![CDATA[<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="http://music.163.com/outchain/player?type=2&id=584155&auto=0&height=66"></iframe>
+
+<p>头绳：你最近都用不到我了……</p>
+<p>她：因为我剪了短发嘛，好看吗？漂亮吗？</p>
+<p>头绳：为什么剪短头发？因为夏天，还是因为不爱了？</p>
+<p>她：因为不爱。。———哈！才不是！当然因为夏天啊！夏天很热啊！很热啊！</p>
+<a id="more"></a>
+<hr>
+<p>她：为什么你还没走？</p>
+<p>剃须刀：他只是忘记把我带走。</p>
+<p>她：他好像也忘记把我带走了。</p>
+<p>衬衫：还有我，还有我。</p>
+<hr>
+<p>日记本：你好像最近无所事事，却又心事很多。</p>
+<p>她：为什么？</p>
+<p>日记本：因为你总是翻开我，却又什么也不写。</p>
+<hr>
+<p>吸尘器：偶尔也要给我清清内存！</p>
+<p>她：像清空电脑回收箱一样？</p>
+<p>吸尘器：不，像清空你的烦恼一样。</p>
+<p>她：所以我才总忘记帮你清理嘛。。。</p>
+<hr>
+<p>毛衣：干嘛总枕着我睡觉？</p>
+<p>她：总觉得你身上的味道很好闻。</p>
+<p>毛衣：因为那天你穿着我被他拥抱了？</p>
+<hr>
+<p>她：我最近是不是变胖了？</p>
+<p>镜子：小姐，我可不是魔镜嗷～</p>
+<p>她：你什么意思！你就是说我胖了！</p>
+<p>镜子：这锅你应该让冰箱背。</p>
+<hr>
+<p>冰箱：今天你休想再打开我了！</p>
+<p>她：哎哟我就看看，只看看，不拿东西走。</p>
+<p>冰箱：呸呸呸，你自己数数今天吃了多少零食多少冰淇淋了？</p>
+<p>她：会胖吗？</p>
+<p>冰箱：会啊。</p>
+<p>她：胖了又怎样？</p>
+<p>冰箱：胖了就没有男孩子喜欢你了。</p>
+<p>她：太好了！快把你第三层的肉干给我！酸奶也来一份！</p>
+<hr>
+<p>晾衣架：对面阳台上有几盆薄荷真香。</p>
+<p>她：这你都能闻到？</p>
+<p>晾衣架：看着就很清香啊。</p>
+<p>她：我该换几盆了？</p>
+<p>阳台吊兰：妈的晾衣架！</p>
+<hr>
+<p>黄瓜：虽然你总分不清我是蔬菜还是水果，但请不要把我总用到奇怪的地方。</p>
+<p>她：啊……讨厌！你都知道啦？</p>
+<p>黄瓜：我说的是敷脸啊！你以为是什么？</p>
+<p>她：哦…对！敷脸！敷脸！</p>
+<hr>
+<p>电风扇：不要总洗了脸对着我咦咦啊啊地叫。</p>
+<p>她：很傻吗？</p>
+<p>电风扇：不是啊，会感冒。</p>
+<p>她：以前他只是笑我这样很傻而已……</p>
+<hr>
+<p>水杯：最近的口味很杂嘛～</p>
+<p>她：哪有？</p>
+<p>水杯：咖啡，汽水，果醋，鸡尾酒，还有各种茶包，奶茶……这么想尝试新口味？</p>
+<p>她：人总是要面向未来的不是？</p>
+<p>水杯：结果呢？</p>
+<p>她：结果还是白水好喝，可有的时候白水却不让你喝了。</p>
+<p>远处，开水器：哦yes！</p>
+<hr>
+<p>沙发：最近你怎么都在我身上睡？</p>
+<p>她：不知道，看着看着电视，发着发着呆，就睡着了。</p>
+<p>沙发：会冷的。</p>
+<p>她：哈哈哈你还在关注我会不会冷。</p>
+<p>毯子：嗯。</p>
+<p>电视机：sorry也没法逗你开心。</p>
+<hr>
+<p>天花板：诶你最近是不是喜欢我啊，总感觉你一直在看我。</p>
+<p>她：哈哈哈哈是吗？</p>
+<p>窗帘，桌椅，门窗，墙壁，花洒，衣橱（集体斜眼）：她最近也经常盯着我们看。</p>
+<p>她：哈哈哈哈我真没有在意诶，总感觉最近时间过的很慢。</p>
+<p>天花板：呐你发呆的时候在想谁呢？</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[致亲爱的夏天君，见信如晤]]></title>
+      <url>http://yoursite.com/2016/06/22/summer/</url>
+      <content type="html"><![CDATA[<p><img src="http://ww1.sinaimg.cn/mw690/879b6440gw1f54bzb8xpsj20qo0f0tc0.jpg" class="full-image"></p>
+<a id="more"></a>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="http://music.163.com/outchain/player?type=2&id=22678650&auto=0&height=66"></iframe>
+
+<p>亲爱的夏天君，见信如晤</p>
+<p>我今天换上了夏天用的凉席。</p>
+<p>光是从柜子里把它拿出来，搭到阳台上晒一晒的过程，就让我想起了夏天里好多好多并不是故事的回忆。</p>
+<p>闷热的空气，清晨的一瞬凉爽，<br>早晨趁妈妈不注意偷喝的冰薄荷水，<br>雷雨前空气里的腥味，暴雨后温度的骤降，<br>大毒日头下空旷无人的小区广场，我拎着买来的好多冰淇淋并不急躁地溜达着，仰头喝着冰镇汽水，看着小区公告栏上的温度计。<br>到家后我妈一边把它们收进冰箱里，一边骂我肯定又在路上磨磨蹭蹭了。</p>
+<p>然而在去年夏天，前年夏天，每一个夏天里的时候，<br>我在我现在所怀念的闷热的空气里，凉爽的清晨里，暴雨前后里，无人的广场里，冰甜的雪糕里的时候，<br>我并不像现在一样对那一刻如此怀念，我甚至从没有好好地体会过那一刻和每一刻。</p>
+<p>就好像我总喜欢把雪糕里很细很细的蓝莓夹心清凉凉地一口吃掉一样，</p>
+<p>在那一刻我只顾着囫囵地吞下整个夏天，却连夏天里风的味道都没有闻到过。</p>
+<p>对于一个目前还是学生的我来说，<br>夏天意味着假期意味着懒散意味着各种闲暇各种云淡风轻风吹草地。</p>
+<p>这样更加放纵了我的尿性。</p>
+<p>我在每一个夏天到来之前，总会很认真很认真地对自己说，这个夏天，一定要过得很好很棒，很棒很好。</p>
+<p>可每个夏天中，我还是每天在空调房里睡到中午，午饭与西瓜或者冰水一起吃，心情好的时候，傍晚会替我妈出门买个水果遛个狗。</p>
+<p>然后夏天过去，秋天哗啦哗啦地来到，迎接马上簌簌而来的冬天。接着还有春天，竟然还有三四个月，<br>好漫长好漫长，</p>
+<p>我总是在三季中等待着一季，<br>然后在那一季中放任自己，<br>在那一季末尾里开始惧怕即将到来的又是等待一季的三季。</p>
+<p>很拗口的一句话，满含了我对自己的自嘲。</p>
+<p>今年夏天我想继续养几盆薄荷，养很多盆，最好堆得我的阳台满满的，站在楼下甚至小区的路口，能看到一片浅灰色的高高的住宅楼里，有一个翠绿的阳台。</p>
+<p>今年夏天我还想研究也好，学会也罢，想弄好多好多好喝的水，里面可能会放很多东西，水果，茶，薄荷。喝水真的太重要了，我在想，如果我能把一杯水变得特别好喝又不一样的清凉而又健康的味道的话，每天喝水的时候，心情都会是跟新换的水杯一样美丽吧！</p>
+<p>今年夏天我还想自己买很多冰淇淋，像小时候跟着爸爸骑车去批发雪糕一样。那时候我总是特别认真，会问卖雪糕的阿姨要好几个塑料袋，裹在雪糕外面，上楼梯的时候我都会爬得很快，甚至把雪糕放到冰箱里面的时候，我嘴里都在念念有词地数数。今年我还要买几次很多的冰淇淋，各种甜筒，穿着裤衩夹拖，晃晃悠悠，走到楼底下抬头看看翠绿的阳台，然后把不幸化掉的冰淇淋，全都倒进一个碗里吃掉，或者滴几滴在我做的好喝的水里。</p>
+<p>今年夏天我还要骑车围着小城逛一圈，饿了吃，渴了停下来买饮料喝。<br>印象里这座城市有太多太多在夏天能遮挡掉一整条路的宽大树木了，<br>路上都没人的话，我可以一边骑车一边趁机抬头看看它们，闷热的空气下打个招呼。</p>
+<p>嗯，今年夏天还想遇到一个姑娘，这个姑娘可能会给人一种冰镇荔枝的感觉。<br>然后我带着她去吃荔枝，喝冰镇荔枝饮，做荔枝酸奶给她吃，<br>可我不会告诉她，关于她很像荔枝的这个比喻，就这么偷着乐呵，度过一整个夏天。</p>
+<p>今年夏天我大概还会想干很多很多，更多更多的事情，<br>以上这些只是我码字的今晚，对夏天的一些幻想；<br>我实在对夏天有太多太多的期待了。</p>
+<p>但我也太了解太了解我的尿性了，<br>这个夏天注定还会是，空调，西瓜，冰水，宅，沉睡，吊扇吱啦吱啦，夜里经常会有雷阵雨，的夏天。<br>然后是哗啦哗啦的秋天，簌簌而来的冬天，和温暖的春天。</p>
+<p>不过没关系，<br>真的没关系，</p>
+<p>夏天也好，感情也好，期待也好，生活也好，</p>
+<p>就让我们在期待与遗忘中不断又不断地循环吧。</p>
+<p>致亲爱的夏天君，见信如晤</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[猴年马月.关于高考的二三事]]></title>
+      <url>http://yoursite.com/2016/06/07/gaokao/</url>
+      <content type="html"><![CDATA[<p><img src="http://ww1.sinaimg.cn/large/879b6440jw1f4mtxef46fj20go08zab9.jpg" class="full-image"></p>
+<a id="more"></a>
+<hr>
+<h2 id="关于许多草草结束的感情"><a href="#关于许多草草结束的感情" class="headerlink" title="关于许多草草结束的感情"></a>关于许多草草结束的感情</h2><p>我高考的前一个礼拜，晚自习的时候总会打雷下雨，雷阵雨。我在轰隆轰隆的声音中，花了三个晚自习的时间，绞尽脑汁想了十几种表白的方法，优劣条件，可行性，成功概率，一一细化。我的教室在四楼，<br>那种闪电打在你左侧，雷劈在你右侧的共鸣感，是此生再也无法体会的心潮澎湃。</p>
+<p>我一边挖空心思地想着，<br>一边盯着最前排那个我即将在高考结束之际释放我雷电滚滚的情愫的姑娘，<br>她一直在安静地做题，<br>我内心风起云涌。</p>
+<p>然后6月9号高考结束，<br>我在出考场门与她相遇，我在校车上与她相遇，我在离校时与她相遇。</p>
+<p>可对话似乎仅仅被禁锢在，<br>“诶？好巧！”<br>“你也走啦？”<br>“有空联系。”<br>“哈哈终于结束了。”</p>
+<p>我至今仍无法理解那时的心里活动以及具体原因。</p>
+<p>在那之前高考是人生的全部，在这全部之外，<br>所有的感情、计划、憧憬，<br>都在给这个“全部”让路，<br>可高考结束，全部化为虚无之后，<br>那些曾经风起云涌，雷电滚滚劈下的决心、感情、憧憬与向往，<br>也随着高考虚无化了，</p>
+<p>那天我遇到那个姑娘的每一次，<br>心里都发虚得、暗暗地在想，<br>“额……好像也没有必要…非要这样吧……啊啊啊我只想赶快回家去睡个长长的觉，吃西瓜而已。<br>而已而已。”</p>
+<p>与之类似的还有，</p>
+<p>无数在高考前，与互相看不惯的人约的架，<br>“等考完，南门旁小车库，分分钟neng死你！”</p>
+<p>你与他考完出门，在楼梯口相识，一瞥，</p>
+<p>谁也没有到南门旁的小车库去，<br>彼此也没有想过以后会再见，而且的确也不会再见。</p>
+<p>还有高考前，与无数个好友、同学，规划的无数次不同的旅行，</p>
+<p>都泡汤在凉席、空调、西瓜、酣睡上了。</p>
+<p>许多高考之外的风起云涌，<br>随着高考的结束，也一起草草结束不了了之了，<br>而且是在我们完全没有意识到的情况下。</p>
+<hr>
+<h2 id="关于意料之外的暖心"><a href="#关于意料之外的暖心" class="headerlink" title="关于意料之外的暖心"></a>关于意料之外的暖心</h2><p>班主任是个五大三粗的汉子，平时办事总是不拘小节的性格与作风。</p>
+<p>但高考前一整个下午的自习，<br>他拉出去一张桌子凳子，坐在教室门口，自己一个人用美工刀削了42枝铅笔，<br>买了42个文件袋，42张空白的名片卡纸，</p>
+<p>然后他用铅笔写了每一个人的名字在卡纸上，把卡纸塞进透明文件袋的卡槽里，</p>
+<p>再然后把铅笔，橡皮，准考证，小刀，签字笔，一个一个一份一份塞进文件袋里。</p>
+<p>最后嬉笑着发到我们每个人的手里，<br>然后哈哈笑着说，“好像是第一次也是最后一次写咱班所有同学的名字。经常提笔忘字。<br>不知道以后是先想起你们的名字，还是先记起你们的脸呢？哈哈哈哈。”</p>
+<hr>
+<h2 id="关于暗恋与后知后觉"><a href="#关于暗恋与后知后觉" class="headerlink" title="关于暗恋与后知后觉"></a>关于暗恋与后知后觉</h2><p>我们学校特别心宽地在高考前两天开了毕业典礼，特别大方地留给高三学生与老师一下午的时间拍毕业照。</p>
+<p>大家都穿上了“校服大礼包”里的礼服，</p>
+<p>男生们满世界找着男老师，<br>最后玩一次“阿鲁巴”的游戏，旗杆下，树桩下，教室门旁，甚至楼梯扶手，，都不放过，<br>然后拍照，<br>最后跟老师互相拥抱。</p>
+<p>这是我学生时代经历的第一次也是最后一次，最善意的阿鲁巴。</p>
+<p>正当我玩得热火朝天，<br>衬衫下摆从裤腰里跑出来，礼服的领带也七扭八歪，大家大汗淋漓仍兴致盎然的时候，</p>
+<p>邻班一个经常打照面的女生叫住了我，</p>
+<p>问我能不能一起拍一张毕业照，</p>
+<p>ok，fine。</p>
+<p>我站在她身旁，脑子里还想着下一个阿鲁巴的目标与姿势，</p>
+<p>一脸地斗志昂扬，</p>
+<p>脸上不自觉露出屌不兮兮地感情，<br>不自觉地把鼻孔对着摄像镜头，下巴快顶到天际。</p>
+<p>拍完之后女生从路人手里接过相机，一边道谢一边低头看，<br>然后冲我说，哎呀把你拍的好奇怪好不好看啊，<br>我们再重拍一张吧。</p>
+<p>我拍拍她肩膀说，没事没事，就这样，哈哈就这样，把我拍丑一点就显得你更好看了哈哈哈哈。。。</p>
+<p>然后我就跟她挥挥手，马不停地地加入下一场浩浩荡荡的阿鲁巴游戏中。</p>
+<p>啧……</p>
+<p>后来听我们班的一个女生说，<br>邻班的那个姑娘，喜欢我这个傻逼喜欢了整整三年。</p>
+<hr>
+<h2 id="关于许多的巧合"><a href="#关于许多的巧合" class="headerlink" title="关于许多的巧合"></a>关于许多的巧合</h2><p>不知道为什么，高考那段时间经常会遇到许多特别巧的事。</p>
+<p>比如我喝茉莉蜜茶连喝了三次“再来一瓶”。</p>
+<p>比如我考第一场之前无比紧张地上厕所，匆忙中发现没带纸，敲敲门问隔壁借了纸。</p>
+<p>第一场考试开始，监考老师把试卷发下，<br>我看他的手正是开考之前厕所隔壁坑伸过来的救急之手，<br>而他也认出来接过试卷的我的手，<br>两人相视一笑，</p>
+<p>空气中好像又弥漫起厕所里夏日蒸腾而上的刺鼻气息，与苍蝇嗡嗡的叫。</p>
+<p>还比如我之前在另一个回答里写过的，<br>那个中考时候坐在我前面的姑娘，高考时也坐在我前面。<br>神奇的是我竟然记得她而且如此确定前面的就是她。</p>
+<p>其实后来我慢慢想通，</p>
+<p>好多让你可以记忆很多年，印象深刻的巧合，<br>只不过是处在了一个你比较重视或者印象深刻的阶段，<br>被沾亲带故地，觉得好巧，觉得印象深刻。</p>
+<hr>
+<h2 id="也关于许多别离"><a href="#也关于许多别离" class="headerlink" title="也关于许多别离"></a>也关于许多别离</h2><p>果然有好多人，从高考结束那天开始，我就再也没见过。<br>比如邻班的班花，<br>比如邻班再邻班的班花，<br>比如楼下班级的班花，<br>比如楼上班级的班花。</p>
+<p>……</p>
+<hr>
+<h2 id="还关于许多零散的片段"><a href="#还关于许多零散的片段" class="headerlink" title="还关于许多零散的片段"></a>还关于许多零散的片段</h2><p>高考之前的最后一个礼拜六，傍晚有火烧云；</p>
+<p>而那个礼拜六的下午学校没有留我们在教室做试卷自习，我跟同桌一起去门口的面馆吃面，我要的红烧牛肉面，他要的鸭腿面，我要的玻璃瓶可乐。他要的罐装苹果味美年达。</p>
+<p>考完之后，我把一瓶没喝完的脉动丢在了垃圾桶旁边，同学问你还要不要捡起来，我说哈哈哈不拣了我毕业了。<br>我没撕过书没烧过试卷，那个“哈哈哈”算我为数不多的小疯狂吧。</p>
+<p>寝室里每人的家长都在帮每人收拾行李，搬离宿舍。我从篮子里拿了洗发水沐浴露，反锁了厕所门冲凉水澡，准备一身轻松且帅气地出门，<br>洗了澡，我吹头发的时候，<br>对床室友离开，<br>他对我说再见，吹风机呼呼地我没听清楚，<br>他弹了一下我屁股，我转身用吹风机对他呼呼吹了几下，大家哈哈一笑，就此别过。<br>此后我去了山东，他留在了浙江，再没有相见。</p>
+<hr>
+<p>写了这么多，<br>发现没有，<br>记忆如潮水，</p>
+<p>越写越多，越想越多，怎么也写不完，</p>
+<p>而且全部都印象深刻，全部都印象深刻，</p>
+<p>无论是喜欢的姑娘还是牛肉面，<br>无论是暖心的班主任还是傍晚的夕阳红。</p>
+<p>甚至你那段时期，<br>走在路上低头看到的每一块地砖，<br>都能在你心里留下个一段时间。</p>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="http://music.163.com/outchain/player?type=2&id=65538&auto=0&height=66"></iframe>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[六一.愿我们内心永远住着一个孩子]]></title>
+      <url>http://yoursite.com/2016/06/01/61/</url>
+      <content type="html"><![CDATA[<p><img src="http://ww4.sinaimg.cn/large/879b6440gw1f4fz4u88cvj21hc0u0dss.jpg" class="full-image"><br><a id="more"></a></p>
+<p>生命之轮每滚过一个六一，童真便失去一份，快乐的能力便减少了一份。<br>现在的人们，似乎越来越难以快乐，越来越难以有幸福感。</p>
+<p><img src="http://ww3.sinaimg.cn/large/879b6440gw1f4fzhi9zqtj20go0fgjsh.jpg" alt=""></p>
+<p>成长是每个人都要经历的阵痛。<br>小时候的我会因为一颗棒棒糖高兴一整天，对这个世界充满了好奇，相信梦想与努力的力量。<br>长大后的我变得世俗，沦为平庸，丧失了梦想与好奇。<br>所以快乐和幸福越来越少。</p>
+<p><img src="http://ww3.sinaimg.cn/large/879b6440gw1f4fzqzgbj5j20go0fgdih.jpg" alt=""></p>
+<blockquote>
+<p>只是我心中还有一方净土，即使在别人眼里寸草不生，却始终一尘不染.</p>
+</blockquote>
+<p>愿我们内心永远住着一个孩子</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[影记以及日常]]></title>
+      <url>http://yoursite.com/2016/05/26/abc/</url>
+      <content type="html"><![CDATA[<h1 id="关于电影"><a href="#关于电影" class="headerlink" title="关于电影"></a>关于电影</h1><h2 id="《海街日记》"><a href="#《海街日记》" class="headerlink" title="《海街日记》"></a>《海街日记》</h2><blockquote>
+<p>活着的东西总是很麻烦的<br>        ——电影《海街日记》</p>
+</blockquote>
+<p><img src="http://ww4.sinaimg.cn/large/879b6440gw1f45gdm41mfj20go0bmjup.jpg" class="full-image"><br><a id="more"></a></p>
+<p>仲夏，烟火，梅子酒，沙丁鱼，贴窗花的推拉门，四人的暖炉桌，樱花汇成的隧道，火车经过的小镇，梅雨时节走过的阶梯，沙滩上的脚印，最后所有温柔隽永的情感都堆积成随着海风轻轻拍打过来的海浪。</p>
+<p>真想就这样一直看她们永远的美下去。<br><img src="http://ww2.sinaimg.cn/large/879b6440gw1f45gu4mb8sj20go09ddhg.jpg" class="full-image"></p>
+<h2 id="《小森林》"><a href="#《小森林》" class="headerlink" title="《小森林》"></a>《小森林》</h2><p><img src="http://ww1.sinaimg.cn/large/879b6440gw1f4a4kuvq7qj20go0b4tal.jpg" class="full-image"></p>
+<p>日版舌尖上的中国，一部关于吃吃吃的电影，静谧中透着温馨。<br>每一道美食都是对生命的感悟，都凝聚着对生活的热爱。</p>
+<p><img src="http://ww4.sinaimg.cn/large/879b6440gw1f4a4nsd875j20go0gogr0.jpg" class="full-image"></p>
+<hr>
+<h1 id="关于音乐"><a href="#关于音乐" class="headerlink" title="关于音乐"></a>关于音乐</h1><blockquote>
+<p>稻草上的火鸡 那么的美丽<br>不用出人头地 也不用欺骗自己<br>稻草上的火鸡 那么的神气<br>从来不会生气 也不会委屈<br>再看看你自己<br>—花儿乐队《稻草上的火鸡》</p>
+</blockquote>
+<p>这是大张伟在15岁时写的歌，早慧的孩子都有个共同特点，就是早已看明白了太多事情，然后越活越幼稚，大张伟就是个这样的例子，从早年歌里听到了太多超越他当时年龄的才华，而懂他的人又有多少呢？生活的艰辛和周围人议论无时不刻的在敲打着他，他只好用装疯卖傻的方式将自己包裹在他自认为讨喜的外壳下，埋葬才华。</p>
+<blockquote>
+<p>再看看你自己</p>
+</blockquote>
+<p>现在你们讨厌的人，就是你们长大后的样子。<br>19岁的大张伟在安静的舞台上如是说到。</p>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="http://music.163.com/outchain/player?type=2&id=357384&auto=0&height=66"></iframe>
+
+<blockquote>
+<p>全世界的雨打到我，我的梦已经湿透了.</p>
+</blockquote>
+<hr>
+<h1 id="关于自己"><a href="#关于自己" class="headerlink" title="关于自己"></a>关于自己</h1><p>直视自我内心的人，是值得敬佩的。<br>我不是，但我有个高中同学是，因为他能坚持每天写日记。</p>
+<p>越长大，日记越是件难事。</p>
+<p>我翻看很小时候的日记本，寥寥几笔，满满回忆；<br>再长大一些，不好看了，因为有些虚假，更多是为了应付老师的作业。<br>没有了真情实意，日记更像是作文。你看这名字的意义也够直接，“作”的文。</p>
+<p>如果内心的小人与你说话，却都是谎话，记录又有何意义？<br>所以心智成熟后，日记越来越难被坚持下来。</p>
+<p>更残酷的是，有时你根本不知道自己是不是在说谎！<br>你不确定是否喜欢现在的工作，<br>不确定自己的付出是否有回报，<br>以及，不确定爱不爱她</p>
+<p>现代人想了一个极好的方法，叫——放空自己<br>把跳出来跟你争论的小人掩藏在游戏与歌酒里，什么都不去想，不去问。偶尔这样一下也挺好。</p>
+<p>但我觉得，真实的记录还是要有。<br>无论是旅行，聚会，书籍，电影，与长时间循环过的歌曲。</p>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="http://music.163.com/outchain/player?type=2&id=41665696&auto=0&height=66"></iframe>]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[从一个实例简单学习RecyclerView基础应用]]></title>
+      <url>http://yoursite.com/2016/05/23/ex1/</url>
+      <content type="html"><![CDATA[<h2 id="实例简介"><a href="#实例简介" class="headerlink" title="实例简介"></a>实例简介</h2><ul>
+<li>每日对【听力特快】中空中英语教室和CNN学生新闻视频栏目的音频文件下载，同时包括对CNN学生新闻视频的字幕抓取</li>
+<li>RecyclerView+CardView进行布局展示</li>
+<li>AsyncTask和Jsoup进行异步网络下载音频和字幕抓取</li>
+<li>MediaPlay 进行判断本地是否有音频，若有则本地播放，若无则进行预加载播放</li>
+<li>AppCompatSeekBar 进度控制<h2 id="RcyclerView简述"><a href="#RcyclerView简述" class="headerlink" title="RcyclerView简述"></a>RcyclerView简述</h2><h3 id="基础代码"><a href="#基础代码" class="headerlink" title="基础代码"></a>基础代码</h3><a id="more"></a>
+</li>
+</ul>
+<ul>
+<li>LayoutManager: 管理RecyclerView的结构.</li>
+<li>Adapter: 处理每个Item的显示.</li>
+<li>ItemDecoration: 添加每个Item的装饰.</li>
+<li>ItemAnimator: 负责添加\移除\重排序时的动画效果.<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"> mRecyclerView = findView(R.id.recyclerView);</div><div class="line"><span class="comment">//设置布局管理器</span></div><div class="line">mRecyclerView.setLayoutManager(layout);</div><div class="line"><span class="comment">//设置adapter</span></div><div class="line">mRecyclerView.setAdapter(adapter)</div><div class="line"><span class="comment">//设置Item增加、移除动画</span></div><div class="line">mRecyclerView.setItemAnimator(<span class="keyword">new</span> DefaultItemAnimator());</div><div class="line"><span class="comment">//添加分割线</span></div><div class="line">mRecyclerView.addItemDecoration(<span class="keyword">new</span> DividerItemDecoration(</div><div class="line">                getActivity(), DividerItemDecoration.HORIZONTAL_LIST));</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">LinearLayoutManager llm = <span class="keyword">new</span> LinearLayoutManager(MainActivity.<span class="keyword">this</span>);</div><div class="line">recyclerView.setLayoutManager(llm);</div><div class="line">recyclerView.setHasFixedSize(<span class="keyword">true</span>);</div><div class="line">recyclerView.setAdapter(adapter);</div><div class="line"><span class="keyword">int</span> spacingInPixels = getResources().getDimensionPixelSize(R.dimen.space);</div><div class="line">recyclerView.addItemDecoration(<span class="keyword">new</span> SpaceItemDecoration(spacingInPixels)); <span class="comment">//设置分割线</span></div></pre></td></tr></table></figure>
+<h3 id="布局管理"><a href="#布局管理" class="headerlink" title="布局管理"></a>布局管理</h3><ul>
+<li><p>RecyclerView提供这些内置的布局管理器：</p>
+</li>
+<li><p>LinearLayoutManager 显示在垂直或水平滚动列表项。</p>
+</li>
+<li><p>GridLayoutManager 显示在网格中的项目。</p>
+</li>
+<li><p>StaggeredGridLayoutManager 显示了交错网格项目。</p>
+</li>
+<li><p>要创建自定义布局管理器，扩展RecyclerView.LayoutManager类。</p>
+</li>
+</ul>
+<h3 id="自定义分割线"><a href="#自定义分割线" class="headerlink" title="自定义分割线"></a>自定义分割线</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">// 分隔间距 继承RecyclerView.ItemDecoration</span></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">SpaceItemDecoration</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">ItemDecoration</span> </span>&#123;</div><div class="line">        <span class="keyword">private</span> <span class="keyword">int</span> space;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">SpaceItemDecoration</span><span class="params">(<span class="keyword">int</span> space)</span> </span>&#123;</div><div class="line">            <span class="keyword">this</span>.space = space;</div><div class="line">        &#125;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getItemOffsets</span><span class="params">(Rect outRect, View view, RecyclerView parent, RecyclerView.State state)</span> </span>&#123;</div><div class="line"><span class="comment">//            super.getItemOffsets(outRect, view, parent, state);</span></div><div class="line">            <span class="keyword">if</span> (parent.getChildAdapterPosition(view) != <span class="number">0</span>) &#123;</div><div class="line">                outRect.top = space;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h3 id="写好继承自RecyclerView-ItemDecoration的类，即可自定义间隔距离。"><a href="#写好继承自RecyclerView-ItemDecoration的类，即可自定义间隔距离。" class="headerlink" title="写好继承自RecyclerView.ItemDecoration的类，即可自定义间隔距离。"></a>写好继承自RecyclerView.ItemDecoration的类，即可自定义间隔距离。</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> spacingInPixels = getResources().getDimensionPixelSize(R.dimen.space);</div><div class="line">recyclerView.addItemDecoration(<span class="keyword">new</span> SpaceItemDecoration(spacingInPixels));</div></pre></td></tr></table></figure>
+<h3 id="Adapter"><a href="#Adapter" class="headerlink" title="Adapter"></a>Adapter</h3><p>适配器, 处理RecyclerView的Item事务.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RecyclerViewAdapter</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">Adapter</span>&lt;<span class="title">RecyclerViewAdapter</span>.<span class="title">InfosViewHolder</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String TAG = <span class="string">"RecyclerViewAdapter"</span>;</div><div class="line">    <span class="keyword">private</span> List&lt;Infos&gt; infos;</div><div class="line">    <span class="keyword">private</span> Context context;</div><div class="line">    <span class="keyword">private</span> String[] url = <span class="keyword">new</span> String[<span class="number">2</span>];</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> progress;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RecyclerViewAdapter</span><span class="params">(List&lt;Infos&gt; infos, Context context)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.infos = infos;</div><div class="line">        <span class="keyword">this</span>.context = context;</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> RecyclerViewAdapter.<span class="function">InfosViewHolder <span class="title">onCreateViewHolder</span><span class="params">(ViewGroup viewGroup, <span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">        View v = LayoutInflater.from(context).inflate(R.layout.cardview_item, viewGroup, <span class="keyword">false</span>);</div><div class="line">        InfosViewHolder nvh = <span class="keyword">new</span> InfosViewHolder(v);</div><div class="line">        <span class="keyword">return</span> nvh;</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindViewHolder</span><span class="params">(<span class="keyword">final</span> RecyclerViewAdapter.InfosViewHolder personViewHolder, <span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">int</span> j = i;</div><div class="line">      personViewHolder.news_photo.setImageResource(infos.get(i).getPhotoId());</div><div class="line">        personViewHolder.news_title.setText(infos.get(i).getTitle());</div><div class="line">        personViewHolder.news_desc.setText(infos.get(i).getDesc());</div><div class="line">        url[i] = infos.get(i).getUrl();</div><div class="line">        <span class="comment">//cardView arrowbutton设置点击事件</span></div><div class="line">        personViewHolder.cardView.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">                Intent intent = <span class="keyword">new</span> Intent(context, InfosActivity.class);</div><div class="line">                intent.putExtra(<span class="string">"Infos"</span>, infos.get(j));</div><div class="line">                context.startActivity(intent);</div><div class="line">                Log.d(TAG, <span class="string">"this is "</span> + j);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">      personViewHolder.arrowButton.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">                personViewHolder.arrowButton.startAnimating();</div><div class="line"><span class="comment">//               这里因为viewHolder是final 从第一栏加载 所以最后的数据是最好一栏的数据 解决方案就是将viewHolder需要做事件的控件传入</span></div><div class="line">                DownloadTask downloadTask = <span class="keyword">new</span> DownloadTask(context, infos.get(j).getTitle(), personViewHolder.arrowButton);</div><div class="line">                downloadTask.execute(url[j]);</div><div class="line">                Log.d(TAG, url[j]);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure></p>
+<h3 id="关键方法意义"><a href="#关键方法意义" class="headerlink" title="关键方法意义"></a>关键方法意义</h3><blockquote>
+<p>onCreateViewHolder创建ViewHolder.<br>onBindViewHolder绑定每一项数据.</p>
+<p>getItemCount返回列表长度.</p>
+</blockquote>
+<h3 id="RecyclerView强制使用ViewHolder"><a href="#RecyclerView强制使用ViewHolder" class="headerlink" title="RecyclerView强制使用ViewHolder."></a>RecyclerView强制使用ViewHolder.</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//自定义ViewHolder类 进行视图绑定</span></div><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">InfosViewHolder</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">ViewHolder</span> </span>&#123;</div><div class="line">    <span class="meta">@Bind</span>(R.id.cardView)</div><div class="line">    CardView cardView;</div><div class="line">    <span class="meta">@Bind</span>(R.id.news_photo)</div><div class="line">    ImageView news_photo;</div><div class="line">    <span class="meta">@Bind</span>(R.id.news_title)</div><div class="line">    TextView news_title;</div><div class="line">    <span class="meta">@Bind</span>(R.id.news_desc)</div><div class="line">    TextView news_desc;</div><div class="line">    <span class="meta">@Bind</span>(R.id.arrow_button)</div><div class="line">    ArrowDownloadButton arrowButton;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">InfosViewHolder</span><span class="params">(<span class="keyword">final</span> View itemView)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(itemView);		</div><div class="line">        ButterKnife.bind(<span class="keyword">this</span>, itemView);</div><div class="line">        <span class="comment">//设置TextView背景为半透明</span></div><div class="line">        news_title.setBackgroundColor(Color.argb(<span class="number">20</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>在onCreateViewHolder方法, 创建类; 在onBindViewHolder方法, 绑定数据.</p>
+</blockquote>
+<h3 id="遇到的小问题"><a href="#遇到的小问题" class="headerlink" title="遇到的小问题"></a>遇到的小问题</h3><p>ViewHolder加载视图的顺序是从第一个Item到最后一个，而且该对象是final类型，故自己最初在DownloadTask exntend AsyncTask&lt;&gt; 该类写 ViewHolder.arrowButton.setProgress 只有最后一个Item才会有下载的动画显示（setProgress生效）,但下载是没有问题的。</p>
+<p>解决方案则是将该Button在new DownloadTask的时候传入。</p>
+<p>问题解决。</p>
+<h3 id="数据更新"><a href="#数据更新" class="headerlink" title="数据更新"></a>数据更新</h3><p>RecyclerView的更新自己目前用到的还是adapter.notifyDataSetChanged</p>
+<h3 id="新手Tips"><a href="#新手Tips" class="headerlink" title="新手Tips"></a>新手Tips</h3><ul>
+<li><p>implements Serializable 的范类才可以进行Intent传送</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Intent intent = getIntent();</div><div class="line">Infos item = (Infos) intent.getSerializableExtra(<span class="string">"Infos"</span>);</div></pre></td></tr></table></figure>
+</li>
+<li><p>理解ViewHolder的加载模式</p>
+</li>
+<li><p>Handler灵活应用</p>
+</li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Hello World]]></title>
+      <url>http://yoursite.com/2016/05/23/hello-world/</url>
+      <content type="html"><![CDATA[<ul>
+<li>看到自己的博客加载下来时，突然有种错综复杂的恍惚感。是的，它不是qq空间，不是新浪博客，不是豆瓣小站，也不是贴吧。它更像是属于自己的一块小小的领地，因而我满足于这种归属感。我愿在上面安静劳作。<a id="more"></a></li>
+<li>一个农民，通过自身努力终于分到了一块地，不再需要在地主的土地上创造流量价值时，于是翻身作主的他可以宣告说：Hello World。当然这个农民确切来说是个码农。</li>
+</ul>
+]]></content>
+    </entry>
+    
+  
+  
+</search>
