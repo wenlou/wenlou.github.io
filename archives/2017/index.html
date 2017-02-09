@@ -224,13 +224,11 @@
     <!-- Post Excerpt -->
     <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
         
-            Acitivty的四中启动模式与特点* standard：默认的启动模式
-* singleTop：适合那种接受通知启动的页面，比如新闻客户端之类的，可能会给你推送好几次 ,
-但是每次都是打开同一张页面调用onNewIntent
-* singleTask：适合作为程序入口点，例如浏览器的主界面。不管从多少个应用启动浏览器，只会
-启动主界面一次，其余情况都会走onNewIntent，并且会清空浏览器主界面上面的其他页面。而之前打开过的页面不再新建
-* singleInstance：适合需要与程序分离开的页面。例如闹铃，将闹铃提醒与设置分离，使得闹
-铃提醒成为系统范围内的唯一实例
+            Acitivty的四中启动模式与特点
+standard：默认的启动模式
+singleTop：适合那种接受通知启动的页面，比如新闻客户端之类的，可能会给你推送好几次 ,但是每次都是打开同一张页面调用onNewIntent
+singleTask：适合作为程序入口点，例如浏览器的主界面。不管从多少个应用启动浏览器，只会启动主界面一次，其余情况都会走onNewIntent，并且会清空浏览器主界面上面的其他页面。而之前打开过的页面不再新建
+singleInstance：适合需要与程序分离开的页面。例如闹铃，将闹铃提醒与设置分离，使得闹铃提醒成为系统范围内的唯一实例
 
         
         &nbsp;&nbsp;&nbsp;

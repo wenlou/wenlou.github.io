@@ -6,14 +6,13 @@
     <entry>
       <title><![CDATA[安卓知识点整理]]></title>
       <url>http://yoursite.com/2017/02/09/android-s/</url>
-      <content type="html"><![CDATA[<h2 id="Acitivty的四中启动模式与特点"><a href="#Acitivty的四中启动模式与特点" class="headerlink" title="Acitivty的四中启动模式与特点"></a>Acitivty的四中启动模式与特点</h2><pre><code>* standard：默认的启动模式
-* singleTop：适合那种接受通知启动的页面，比如新闻客户端之类的，可能会给你推送好几次 ,
-但是每次都是打开同一张页面调用onNewIntent
-* singleTask：适合作为程序入口点，例如浏览器的主界面。不管从多少个应用启动浏览器，只会
-启动主界面一次，其余情况都会走onNewIntent，并且会清空浏览器主界面上面的其他页面。而之前打开过的页面不再新建
-* singleInstance：适合需要与程序分离开的页面。例如闹铃，将闹铃提醒与设置分离，使得闹
-铃提醒成为系统范围内的唯一实例
-</code></pre><a id="more"></a>
+      <content type="html"><![CDATA[<h2 id="Acitivty的四中启动模式与特点"><a href="#Acitivty的四中启动模式与特点" class="headerlink" title="Acitivty的四中启动模式与特点"></a>Acitivty的四中启动模式与特点</h2><ul>
+<li>standard：默认的启动模式</li>
+<li>singleTop：适合那种接受通知启动的页面，比如新闻客户端之类的，可能会给你推送好几次 ,<br>但是每次都是打开同一张页面调用onNewIntent</li>
+<li>singleTask：适合作为程序入口点，例如浏览器的主界面。不管从多少个应用启动浏览器，只会<br>启动主界面一次，其余情况都会走onNewIntent，并且会清空浏览器主界面上面的其他页面。而之前打开过的页面不再新建</li>
+<li>singleInstance：适合需要与程序分离开的页面。例如闹铃，将闹铃提醒与设置分离，使得闹<br>铃提醒成为系统范围内的唯一实例</li>
+</ul>
+<a id="more"></a>
 <h3 id="Acitivity后台闲置退出或异常退出，如何保存数据："><a href="#Acitivity后台闲置退出或异常退出，如何保存数据：" class="headerlink" title="Acitivity后台闲置退出或异常退出，如何保存数据："></a>Acitivity后台闲置退出或异常退出，如何保存数据：</h3><p> 通过 onSaveInstanceState() 和 onRestoreInstanceState() 保存和重启非持久化数据。</p>
 <h2 id="Service的生命周期，两种启动方法，有什么区别"><a href="#Service的生命周期，两种启动方法，有什么区别" class="headerlink" title="Service的生命周期，两种启动方法，有什么区别"></a>Service的生命周期，两种启动方法，有什么区别</h2><h3 id="Service的第一种启动方式采用start的方式开启服务"><a href="#Service的第一种启动方式采用start的方式开启服务" class="headerlink" title="Service的第一种启动方式采用start的方式开启服务"></a>Service的第一种启动方式采用start的方式开启服务</h3><p>使用Service的步骤：</p>
 <blockquote>
