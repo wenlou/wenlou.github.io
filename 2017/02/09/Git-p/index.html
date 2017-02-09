@@ -10,7 +10,7 @@
     
     <title>
         
-            Hello World | 
+            Git的常用命令及总结 | 
         
         代码如诗
     </title>
@@ -48,7 +48,7 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="http://yoursite.com">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Hello World | 代码如诗">
+    <meta property="og:title" content="Git的常用命令及总结 | 代码如诗">
     <meta property="og:description" content="代码如诗">
 
     <!--[if lte IE 9]>
@@ -226,7 +226,7 @@
     </button>
 
     <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn">
-        
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Git基本常用命令"><span class="post-toc-number">1.</span> <span class="post-toc-text">Git基本常用命令</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#在Android-Studio-上使用git"><span class="post-toc-number">2.</span> <span class="post-toc-text">在Android Studio 上使用git</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#创建git及提交代码"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">创建git及提交代码</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#版本回退"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">版本回退</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#创建与合并分支"><span class="post-toc-number">3.</span> <span class="post-toc-text">创建与合并分支</span></a></li></ol>
 
         <!--
         <li class="mdl-menu__item">
@@ -262,7 +262,7 @@
         
     
             <p class="article-headline-p">
-                Hello World
+                Git的常用命令及总结
             </p>
         </div>
 
@@ -281,7 +281,7 @@
     <!-- Author Name & Date -->
     <div>
         <strong>shenxj</strong>
-        <span>5月 23, 2016</span>
+        <span>2月 09, 2017</span>
     </div>
 
     <div class="section-spacer"></div>
@@ -305,7 +305,7 @@
     </button>
     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
         <li class="mdl-menu__item">
-        <a class="post_tag-link" href="/tags/发骚/">发骚</a>
+        <a class="post_tag-link" href="/tags/安卓/">安卓</a>
     </ul>
     
 
@@ -321,7 +321,7 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=Hello World&url=http://yoursite.com//2016/05/23/hello-world/index.html&pic=&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=Git的常用命令及总结&url=http://yoursite.com//2017/02/09/Git-p/index.html&pic=&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
                 分享到微博
             </li>
@@ -330,7 +330,7 @@
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=Hello World&url=http://yoursite.com//2016/05/23/hello-world/index.html&via=shenxj" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=Git的常用命令及总结&url=http://yoursite.com//2017/02/09/Git-p/index.html&via=shenxj" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Twitter
             </li>
@@ -339,7 +339,7 @@
 
     <!-- Share Facebook -->
     
-        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com//2016/05/23/hello-world/index.html" target="_blank">
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com//2017/02/09/Git-p/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Facebook
             </li>
@@ -348,7 +348,7 @@
 
     <!-- Share Google+ -->
     
-        <a class="post_share-link" href="https://plus.google.com/share?url=http://yoursite.com//2016/05/23/hello-world/index.html" target="_blank">
+        <a class="post_share-link" href="https://plus.google.com/share?url=http://yoursite.com//2017/02/09/Git-p/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Google+
             </li>
@@ -360,7 +360,7 @@
 
     <!-- Share QQ -->
     
-        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=代码如诗&title=Hello World&summary=代码如诗&pics=http://yoursite.com/img/favicon.png&url=http://yoursite.com/2016/05/23/hello-world/index.html" target="_blank">
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=代码如诗&title=Git的常用命令及总结&summary=代码如诗&pics=http://yoursite.com/img/favicon.png&url=http://yoursite.com/2017/02/09/Git-p/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 QQ
             </li>
@@ -378,10 +378,46 @@
                 <!-- Post Content -->
                 <div id="post-content" class="markdown-Github mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <ul>
-<li>看到自己的博客加载下来时，突然有种错综复杂的恍惚感。是的，它不是qq空间，不是新浪博客，不是豆瓣小站，也不是贴吧。它更像是属于自己的一块小小的领地，因而我满足于这种归属感。我愿在上面安静劳作。<a id="more"></a></li>
-<li>一个农民，通过自身努力终于分到了一块地，不再需要在地主的土地上创造流量价值时，于是翻身作主的他可以宣告说：Hello World。当然这个农民确切来说是个码农。</li>
+        <h2 id="Git基本常用命令"><a href="#Git基本常用命令" class="headerlink" title="Git基本常用命令"></a>Git基本常用命令</h2><ul>
+<li>git init新建git仓库 </li>
+<li>git add XX 把xx文件添加到暂存区去。</li>
+<li>git commit –m “XX” 提交文件 –m 后面的是注释。</li>
+<li>git status 查看仓库状态</li>
+<li>git diff XX 查看XX文件修改了那些内容</li>
+<li>git log 查看历史记录</li>
+<li>git reset –hard HEAD^ 或者 git reset –hard HEAD~ 回退到上一个版本(如果想回退到100个版本，使用git reset –hard HEAD~100 )</li>
+<li>cat XX 查看XX文件内容</li>
+<li>git reflog 查看历史记录的版本号id</li>
+<li>git checkout — XX 把XX文件在工作区的修改全部撤销。</li>
+<li>git rm XX 删除XX文件</li>
+<li>git remote add origin <a href="https://github.com/xxx关联一个远程库" target="_blank" rel="external">https://github.com/xxx关联一个远程库</a></li>
+<li>git push –u(第一次要用-u 以后不需要) origin master 把当前master分支推送到远程库</li>
+<li>git clone <a href="https://github.com/xxx" target="_blank" rel="external">https://github.com/xxx</a> 从远程库中克隆</li>
+<li>git checkout –b dev 创建dev分支 并切换到dev分支上</li>
+<li>git branch 查看当前所有的分支</li>
+<li>git checkout master 切换回master分支</li>
+<li>git merge dev 在当前的分支上合并dev分支</li>
+<li>git branch –d dev 删除dev分支</li>
+<li>git branch name 创建分支</li>
+<li>git stash 把当前的工作隐藏起来 等以后恢复现场后继续工作</li>
+<li>git stash list 查看所有被隐藏的文件列表</li>
+<li>git stash apply 恢复被隐藏的文件，但是内容不删除</li>
+<li>git stash drop 删除文件</li>
+<li>git stash pop 恢复文件的同时 也删除文件</li>
+<li>git remote 查看远程库的信息</li>
+<li>git remote –v 查看远程库的详细信息</li>
+<li>git push origin master Git会把master分支推送到远程库对应的远程分支上<h2 id="在Android-Studio-上使用git"><a href="#在Android-Studio-上使用git" class="headerlink" title="在Android Studio 上使用git"></a>在Android Studio 上使用git</h2><h3 id="创建git及提交代码"><a href="#创建git及提交代码" class="headerlink" title="创建git及提交代码"></a>创建git及提交代码</h3>1.设置git路径<br><img src="http://i.imgur.com/mFJYjSH.png" alt=""><br>2.在version control中添加本工程的路径并选择git<br><img src="http://i.imgur.com/jJ7CHOH.png" alt=""><br><img src="http://i.imgur.com/cbirVmw.png" alt=""><br>3.点击ok后，工程目录下的文件名称变为红色：指定仓库路径后，未Add的文件<br>4.project视图中项目右键，选择git–&gt;add，文件变为绿色：已Add，但未commit的文件<br>5.项目右键–&gt; Git –&gt; Commit Directory，填写相过信息后点击commit上传，文件名称变为白色<br>6.文件修改后则文件名称为淡蓝色<h3 id="版本回退"><a href="#版本回退" class="headerlink" title="版本回退"></a>版本回退</h3>1.文件修改后提交：文件右键–git–Commit File，或者直接点击工具栏上的图标<img src="http://i.imgur.com/CE7sxj8.png" alt=""><br>2.在Version Control中可查看各个版本所进行的修改，点击文件可查看文件内容<br><img src="http://i.imgur.com/F2o8yjK.png" alt=""><br>3.查看历史记录：<br>git log 或者 git log –pretty=oneline<br><img src="http://i.imgur.com/j30Zmq3.png" alt=""></li>
 </ul>
+<ol>
+<li>回退版本：（最后的数字表示为回退几个版本）<br>git reset –hard HEAD~1<br><img src="http://i.imgur.com/LMGFtQi.png" alt=""></li>
+<li>重新退回最新的版本：<br>git reflog 查看版本号：<br><img src="http://i.imgur.com/CcqeNEu.png" alt=""><br>git reset –hard 版本号<br><img src="http://i.imgur.com/8CHQp6G.png" alt=""> <h2 id="创建与合并分支"><a href="#创建与合并分支" class="headerlink" title="创建与合并分支"></a>创建与合并分支</h2>1、创建与合并分支命令如下：</li>
+</ol>
+<p>查看分支：git branch</p>
+<p>创建分支：git branch name</p>
+<p>切换分支：git checkout name</p>
+<p>创建+切换分支：git checkout –b name</p>
+<p>合并某分支到当前分支：git merge name</p>
+<p>删除分支：git branch –d name<br>2、git checkout –b dev创建dev分支，加入测试用注释文本//dev1并提交，提交命令：<br>git add .<br>git commit -m “xx”<br><img src="http://i.imgur.com/2atgK12.png" alt=""><br>3、git checkout master切换回主分支，新添加的注释消失，添加注释文本//master1并提交<br>4、git merge dev合并分支，出现冲突<br>在冲突的文件上右键–git–Resolve Conflicts可以解决冲突<br><img src="http://i.imgur.com/Ws45Qaz.png" alt=""><br>5、提交后，git branch -d dev删除分支，通常合并分支时，git一般使用”Fast forward”模式，在这种模式下，<br>删除分支后，会丢掉分支信息，使用命令 git merge –no-ff -m “注释” dev 则被删除的分支信息还存在<br>6、最后点击工具栏上的图标提交，提交</p>
 
     
 
@@ -404,19 +440,19 @@
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
     
-        <a href="/2016/05/23/ex1/" id="post_nav-newer" class="prev-content">
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
-                <i class="material-icons">arrow_back</i>
-            </button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            新篇
-        </a>
-    
 
     <!-- Section Spacer -->
     <div class="section-spacer"></div>
 
     <!-- Next Nav -->
+    
+        <a href="/2016/12/17/sdjzu/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
     
 </nav>
 

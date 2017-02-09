@@ -4,6 +4,52 @@
   
     
     <entry>
+      <title><![CDATA[Git的常用命令及总结]]></title>
+      <url>http://yoursite.com/2017/02/09/Git-p/</url>
+      <content type="html"><![CDATA[<h2 id="Git基本常用命令"><a href="#Git基本常用命令" class="headerlink" title="Git基本常用命令"></a>Git基本常用命令</h2><ul>
+<li>git init新建git仓库 </li>
+<li>git add XX 把xx文件添加到暂存区去。</li>
+<li>git commit –m “XX” 提交文件 –m 后面的是注释。</li>
+<li>git status 查看仓库状态</li>
+<li>git diff XX 查看XX文件修改了那些内容</li>
+<li>git log 查看历史记录</li>
+<li>git reset –hard HEAD^ 或者 git reset –hard HEAD~ 回退到上一个版本(如果想回退到100个版本，使用git reset –hard HEAD~100 )</li>
+<li>cat XX 查看XX文件内容</li>
+<li>git reflog 查看历史记录的版本号id</li>
+<li>git checkout — XX 把XX文件在工作区的修改全部撤销。</li>
+<li>git rm XX 删除XX文件</li>
+<li>git remote add origin <a href="https://github.com/xxx关联一个远程库" target="_blank" rel="external">https://github.com/xxx关联一个远程库</a></li>
+<li>git push –u(第一次要用-u 以后不需要) origin master 把当前master分支推送到远程库</li>
+<li>git clone <a href="https://github.com/xxx" target="_blank" rel="external">https://github.com/xxx</a> 从远程库中克隆</li>
+<li>git checkout –b dev 创建dev分支 并切换到dev分支上</li>
+<li>git branch 查看当前所有的分支</li>
+<li>git checkout master 切换回master分支</li>
+<li>git merge dev 在当前的分支上合并dev分支</li>
+<li>git branch –d dev 删除dev分支</li>
+<li>git branch name 创建分支</li>
+<li>git stash 把当前的工作隐藏起来 等以后恢复现场后继续工作</li>
+<li>git stash list 查看所有被隐藏的文件列表</li>
+<li>git stash apply 恢复被隐藏的文件，但是内容不删除</li>
+<li>git stash drop 删除文件</li>
+<li>git stash pop 恢复文件的同时 也删除文件</li>
+<li>git remote 查看远程库的信息</li>
+<li>git remote –v 查看远程库的详细信息</li>
+<li>git push origin master Git会把master分支推送到远程库对应的远程分支上<h2 id="在Android-Studio-上使用git"><a href="#在Android-Studio-上使用git" class="headerlink" title="在Android Studio 上使用git"></a>在Android Studio 上使用git</h2><h3 id="创建git及提交代码"><a href="#创建git及提交代码" class="headerlink" title="创建git及提交代码"></a>创建git及提交代码</h3>1.设置git路径<br><img src="http://i.imgur.com/mFJYjSH.png" alt=""><br>2.在version control中添加本工程的路径并选择git<br><img src="http://i.imgur.com/jJ7CHOH.png" alt=""><br><img src="http://i.imgur.com/cbirVmw.png" alt=""><br>3.点击ok后，工程目录下的文件名称变为红色：指定仓库路径后，未Add的文件<br>4.project视图中项目右键，选择git–&gt;add，文件变为绿色：已Add，但未commit的文件<br>5.项目右键–&gt; Git –&gt; Commit Directory，填写相过信息后点击commit上传，文件名称变为白色<br>6.文件修改后则文件名称为淡蓝色<h3 id="版本回退"><a href="#版本回退" class="headerlink" title="版本回退"></a>版本回退</h3>1.文件修改后提交：文件右键–git–Commit File，或者直接点击工具栏上的图标<img src="http://i.imgur.com/CE7sxj8.png" alt=""><br>2.在Version Control中可查看各个版本所进行的修改，点击文件可查看文件内容<br><img src="http://i.imgur.com/F2o8yjK.png" alt=""><br>3.查看历史记录：<br>git log 或者 git log –pretty=oneline<br><img src="http://i.imgur.com/j30Zmq3.png" alt=""></li>
+</ul>
+<ol>
+<li>回退版本：（最后的数字表示为回退几个版本）<br>git reset –hard HEAD~1<br><img src="http://i.imgur.com/LMGFtQi.png" alt=""></li>
+<li>重新退回最新的版本：<br>git reflog 查看版本号：<br><img src="http://i.imgur.com/CcqeNEu.png" alt=""><br>git reset –hard 版本号<br><img src="http://i.imgur.com/8CHQp6G.png" alt=""> <h2 id="创建与合并分支"><a href="#创建与合并分支" class="headerlink" title="创建与合并分支"></a>创建与合并分支</h2>1、创建与合并分支命令如下：</li>
+</ol>
+<p>查看分支：git branch</p>
+<p>创建分支：git branch name</p>
+<p>切换分支：git checkout name</p>
+<p>创建+切换分支：git checkout –b name</p>
+<p>合并某分支到当前分支：git merge name</p>
+<p>删除分支：git branch –d name<br>2、git checkout –b dev创建dev分支，加入测试用注释文本//dev1并提交，提交命令：<br>git add .<br>git commit -m “xx”<br><img src="http://i.imgur.com/2atgK12.png" alt=""><br>3、git checkout master切换回主分支，新添加的注释消失，添加注释文本//master1并提交<br>4、git merge dev合并分支，出现冲突<br>在冲突的文件上右键–git–Resolve Conflicts可以解决冲突<br><img src="http://i.imgur.com/Ws45Qaz.png" alt=""><br>5、提交后，git branch -d dev删除分支，通常合并分支时，git一般使用”Fast forward”模式，在这种模式下，<br>删除分支后，会丢掉分支信息，使用命令 git merge –no-ff -m “注释” dev 则被删除的分支信息还存在<br>6、最后点击工具栏上的图标提交，提交</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[Python爬虫实战之学习成绩]]></title>
       <url>http://yoursite.com/2016/12/17/sdjzu/</url>
       <content type="html"><![CDATA[<h2 id="ox1模拟登录学生成绩管理系统"><a href="#ox1模拟登录学生成绩管理系统" class="headerlink" title="ox1模拟登录学生成绩管理系统"></a>ox1模拟登录学生成绩管理系统</h2><p>首先进入学校官网<br><img src="http://ww4.sinaimg.cn/large/879b6440jw1fau6oxbgovj21go0nigx1.jpg" alt=""><br>可以看到学校官网的登录并不需要验证码，这对我们的模拟登录可谓是非常便利，接下来点击登录按钮，在F12下的network可以看到指向的地址是<a href="http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal" target="_blank" rel="external">http://urpe.sdjzu.edu.cn/loginPortalUrlForIndexLogin.portal</a><br><img src="http://ww3.sinaimg.cn/large/879b6440jw1fau6pfefc1j21fb0k30wy.jpg" alt=""><br>最主要的内容，我们可以发现有一个表单提交的过程，提交方式为POST，两个参数分别为userName和password。<br>不过我们并不知道是否对header进行检查，我们先不管这么多，先尝试一下模拟登录并保存Cookie。</p>
