@@ -6,7 +6,8 @@
     <entry>
       <title><![CDATA[Git的常用命令及总结]]></title>
       <url>http://yoursite.com/2017/02/09/Git-p/</url>
-      <content type="html"><![CDATA[<h2 id="Git基本常用命令"><a href="#Git基本常用命令" class="headerlink" title="Git基本常用命令"></a>Git基本常用命令</h2><ul>
+      <content type="html"><![CDATA[<h2 id="Git基本常用命令"><a href="#Git基本常用命令" class="headerlink" title="Git基本常用命令"></a>Git基本常用命令</h2><a id="more"></a>
+<ul>
 <li>git init新建git仓库 </li>
 <li>git add XX 把xx文件添加到暂存区去。</li>
 <li>git commit –m “XX” 提交文件 –m 后面的是注释。</li>
