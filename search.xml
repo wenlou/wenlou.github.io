@@ -13,9 +13,8 @@
 启动主界面一次，其余情况都会走onNewIntent，并且会清空浏览器主界面上面的其他页面。而之前打开过的页面不再新建
 * singleInstance：适合需要与程序分离开的页面。例如闹铃，将闹铃提醒与设置分离，使得闹
 铃提醒成为系统范围内的唯一实例
-
-&lt;!-- more --&gt;
-</code></pre><h3 id="Acitivity后台闲置退出或异常退出，如何保存数据："><a href="#Acitivity后台闲置退出或异常退出，如何保存数据：" class="headerlink" title="Acitivity后台闲置退出或异常退出，如何保存数据："></a>Acitivity后台闲置退出或异常退出，如何保存数据：</h3><p> 通过 onSaveInstanceState() 和 onRestoreInstanceState() 保存和重启非持久化数据。</p>
+</code></pre><a id="more"></a>
+<h3 id="Acitivity后台闲置退出或异常退出，如何保存数据："><a href="#Acitivity后台闲置退出或异常退出，如何保存数据：" class="headerlink" title="Acitivity后台闲置退出或异常退出，如何保存数据："></a>Acitivity后台闲置退出或异常退出，如何保存数据：</h3><p> 通过 onSaveInstanceState() 和 onRestoreInstanceState() 保存和重启非持久化数据。</p>
 <h2 id="Service的生命周期，两种启动方法，有什么区别"><a href="#Service的生命周期，两种启动方法，有什么区别" class="headerlink" title="Service的生命周期，两种启动方法，有什么区别"></a>Service的生命周期，两种启动方法，有什么区别</h2><h3 id="Service的第一种启动方式采用start的方式开启服务"><a href="#Service的第一种启动方式采用start的方式开启服务" class="headerlink" title="Service的第一种启动方式采用start的方式开启服务"></a>Service的第一种启动方式采用start的方式开启服务</h3><p>使用Service的步骤：</p>
 <blockquote>
 <p>1.定义一个类继承Service<br>2.在Manifest.xml文件中配置该Service<br>3.使用Context的startService(Intent)方法启动该Service<br>4.不再使用时，调用stopService(Intent)方法停止该服务</p>
